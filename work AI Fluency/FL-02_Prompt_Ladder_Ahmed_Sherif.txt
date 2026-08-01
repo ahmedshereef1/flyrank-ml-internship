@@ -1,0 +1,123 @@
+FL-02 – Prompt Ladder Name: Ahmed Sherif
+
+Task Chosen Generate a FastAPI endpoint for an AI application.
+
+================================================== Baseline Prompt
+(Weak) ==================================================
+
+Prompt: Write backend code for a FastAPI API.
+
+Representative Output: The model generated a simple FastAPI endpoint
+with minimal functionality. It lacked project structure, validation,
+error handling, documentation, and production considerations.
+
+Notes - What changed in the prompt: Baseline. - What improved in the
+output: None. - What still failed: The code was too generic and could
+not be used in a real project. - What I would try next: Give the model a
+clearer goal.
+
+================================================== Version 1 – Layer
+Added: Clear Goal ==================================================
+
+Prompt: Create a FastAPI endpoint for user registration.
+
+Representative Output: The endpoint focused on one specific task instead
+of generating unrelated backend code.
+
+Notes - What changed in the prompt: Added a clear goal. - What improved
+in the output: The response became focused on a single feature. - What
+still failed: It ignored production practices like validation and error
+handling. - What I would try next: Provide project context.
+
+================================================== Version 2 – Layer
+Added: Real Context ==================================================
+
+Prompt: Create a FastAPI endpoint for user registration in an AI SaaS
+application that uses PostgreSQL and SQLAlchemy.
+
+Representative Output: The generated code matched the technology stack
+and introduced realistic database interactions.
+
+Notes - What changed in the prompt: Added project context. - What
+improved in the output: The code became more relevant to a real
+production environment. - What still failed: The response mixed
+explanations with code. - What I would try next: Specify the desired
+output format.
+
+================================================== Version 3 – Layer
+Added: Output Format ==================================================
+
+Prompt: Create a FastAPI endpoint for user registration in an AI SaaS
+application using PostgreSQL and SQLAlchemy. Return only the Python code
+with comments.
+
+Representative Output: The response contained clean code without
+unnecessary explanations.
+
+Notes - What changed in the prompt: Specified the output format. - What
+improved in the output: The response became easier to copy directly into
+a project. - What still failed: The endpoint lacked validation and
+testing guidance. - What I would try next: Add quality criteria.
+
+================================================== Version 4 – Layer
+Added: Quality Criteria
+==================================================
+
+Prompt: Create a FastAPI endpoint for user registration in an AI SaaS
+application using PostgreSQL and SQLAlchemy. Return only Python code.
+Follow clean architecture, use Pydantic validation, proper HTTP status
+codes, and include error handling.
+
+Representative Output: The generated code was significantly cleaner and
+closer to production quality.
+
+Notes - What changed in the prompt: Added quality criteria. - What
+improved in the output: The API included validation, structured
+responses, and better engineering practices. - What still failed: The
+code still assumed missing implementation details. - What I would try
+next: Require verification before making assumptions.
+
+================================================== Version 5 – Layer
+Added: Verification Requirement
+==================================================
+
+Prompt: Create a FastAPI endpoint for user registration in an AI SaaS
+application using PostgreSQL and SQLAlchemy. Return only Python code.
+Follow clean architecture, use Pydantic validation, proper HTTP status
+codes, and error handling. If required information is missing,
+explicitly list your assumptions before generating the code.
+
+Representative Output: The model identified missing information before
+writing code, making the output more reliable and reducing incorrect
+assumptions.
+
+Notes - What changed in the prompt: Added a verification requirement. -
+What improved in the output: The model became more transparent about
+assumptions. - What still failed: Very large projects still require
+repository-specific context. - What I would try next: Provide the
+existing project structure.
+
+================================================== Honest Reflection
+==================================================
+
+Adding the output format improved readability, but it did not
+significantly improve the technical quality of the code. The biggest
+improvement came from adding quality criteria and requiring the model to
+verify assumptions before generating code.
+
+================================================== Final Reusable Prompt
+==================================================
+
+You are an experienced Senior Python and FastAPI Engineer.
+
+Create a production-ready FastAPI endpoint for [FEATURE NAME] in a
+project using PostgreSQL, SQLAlchemy, and Pydantic.
+
+Requirements: - Follow clean architecture principles. - Use type hints
+throughout. - Validate all request data with Pydantic. - Return
+appropriate HTTP status codes. - Implement robust error handling. -
+Write maintainable, well-commented code. - Avoid unnecessary
+complexity. - If any project details are missing, list your assumptions
+before generating the implementation instead of guessing.
+
+Return only the final Python code after stating any assumptions.

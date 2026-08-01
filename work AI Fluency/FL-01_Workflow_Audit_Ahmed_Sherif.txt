@@ -1,0 +1,163 @@
+Workflow Audit (FL-01)
+
+Name: Ahmed Sherif Role: AI/ML Engineer | Data Scientist Date: August
+2026
+
+Weekly Workflow Audit
+
+  ------------------------------------------------------------------------
+  #    Recurring Task           Classification           Rationale
+  ---- ------------------------ ------------------------ -----------------
+  1    Design and implement     Collaborate with AI      AI accelerates
+       FastAPI APIs for AI                               boilerplate and
+       services                                          implementation
+                                                         ideas, while I
+                                                         make architecture
+                                                         and business
+                                                         logic decisions.
+
+  2    Debug Python, FastAPI,   Delegate to AI with      AI helps identify
+       and ML pipeline issues   Review                   possible root
+                                                         causes, but I
+                                                         validate every
+                                                         fix through
+                                                         testing.
+
+  3    Build and improve ML     Collaborate with AI      AI assists with
+       models (training,                                 feature ideas and
+       evaluation, tuning)                               optimization
+                                                         strategies, while
+                                                         I evaluate model
+                                                         performance and
+                                                         select the final
+                                                         approach.
+
+  4    Write SQL queries and    Delegate to AI with      AI generates
+       data processing scripts  Review                   efficient query
+                                                         drafts, but I
+                                                         verify
+                                                         correctness and
+                                                         performance.
+
+  5    Read technical           Delegate to AI with      AI summarizes key
+       documentation and        Review                   points, saving
+       research papers                                   time, while I
+                                                         read important
+                                                         sections in
+                                                         detail when
+                                                         needed.
+
+  6    Review pull requests and Collaborate with AI      AI can identify
+       production code                                   potential issues,
+                                                         but code quality
+                                                         and approval
+                                                         remain my
+                                                         responsibility.
+
+  7    Write technical          Delegate to AI with      AI creates
+       documentation and        Review                   well-structured
+       project READMEs                                   drafts that I
+                                                         edit for accuracy
+                                                         and completeness.
+
+  8    Prepare job              Delegate to AI with      AI improves
+       applications, CV         Review                   writing quality,
+       updates, and LinkedIn                             while I ensure
+       content                                           the content
+                                                         reflects my real
+                                                         experience.
+
+  9    Brainstorm AI project    Collaborate with AI      AI expands
+       ideas and system                                  possible
+       architectures                                     solutions, while
+                                                         I select the best
+                                                         design based on
+                                                         technical
+                                                         constraints.
+
+  10   Generate unit tests for  Fully Automate           AI can generate
+       APIs and Python modules                           most test cases
+                                                         efficiently, with
+                                                         only a quick
+                                                         review before
+                                                         execution.
+
+  11   Organize datasets and    Fully Automate           These repetitive
+       automate preprocessing                            workflows can be
+       pipelines                                         automated using
+                                                         scripts and
+                                                         AI-assisted
+                                                         tooling.
+
+  12   Decide which             Just Me                  This decision
+       technologies, libraries,                          affects long-term
+       or cloud services to                              project success
+       adopt                                             and requires my
+                                                         own engineering
+                                                         judgment.
+
+  13   Accept or decline job    Just Me                  Career decisions
+       offers and career                                 depend on my
+       opportunities                                     personal goals,
+                                                         priorities, and
+                                                         values and should
+                                                         not be delegated
+                                                         to AI.
+  ------------------------------------------------------------------------
+
+Claude Project Configuration
+
+Project Name: AI Engineering Workspace
+
+Who I am
+
+I am Ahmed Sherif, an AI/ML Engineer and Data Scientist. I primarily
+work with Python, FastAPI, Machine Learning, Deep Learning, LLMs,
+Retrieval-Augmented Generation (RAG), MLOps, Docker, PostgreSQL/PostGIS,
+and AWS. I enjoy building production-ready AI systems that solve real
+business problems.
+
+Tone Preferences
+
+Be concise, technical, and practical. Explain complex topics clearly.
+Challenge weak assumptions instead of automatically agreeing. Prioritize
+production-ready solutions, clean code, scalability, and
+maintainability.
+
+Current Goals
+
+-   Become a stronger AI Engineer.
+-   Build scalable production AI systems.
+-   Improve my expertise in LLMs, AI Agents, and MLOps.
+-   Prepare for international AI/ML job opportunities.
+-   Increase development productivity through effective AI
+    collaboration.
+
+Screenshot to include: Take a screenshot showing the project name and
+custom instructions.
+
+Three Target Tasks
+
+Task 1: Build FastAPI APIs for AI Applications
+
+Success Definition: - API endpoints function correctly. - Clean,
+maintainable code. - Ruff/linter passes. - Unit tests pass. - API
+documentation is complete.
+
+Task 2: Debug Machine Learning Pipelines
+
+Success Definition: - Root cause identified. - Bug fixed without
+introducing regressions. - Pipeline executes successfully end-to-end. -
+Solution is documented for future reference.
+
+Task 3: Write Technical Documentation
+
+Success Definition: - Documentation is accurate. - Easy for another
+developer to follow. - Includes setup instructions and examples. -
+Covers assumptions and limitations. - Requires minimal revisions.
+
+Evidence Checklist
+
+Include screenshots showing: - ChatGPT account - Claude account -
+Anthropic Academy account - Enrollment in AI Fluency: Framework &
+Foundations - First module completed - Configured Claude Project

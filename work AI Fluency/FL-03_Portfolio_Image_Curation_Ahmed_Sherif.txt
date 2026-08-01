@@ -1,0 +1,83 @@
+FL-03 – Portfolio Image Curation Name: Ahmed Sherif Role: AI/ML Engineer
+| Data Scientist
+
+======================================== 1. Image Requirements
+========================================
+
+1.  Hero Background Type: AI-Generated Purpose: Clean abstract
+    AI-inspired background using teal gradients and geometric patterns.
+
+2.  Professional Profile Photo Type: Real Photo Purpose: Introduce
+    myself professionally on the About section.
+
+3.  HouSmart Project Type: Real Screenshot Purpose: Show the actual
+    application interface and backend work.
+
+4.  PersonaLLM Project Type: Real Screenshot Purpose: Demonstrate the
+    LLM application and project architecture.
+
+5.  Real-Time ML System Type: Real Screenshot Purpose: Display the
+    dashboard, prediction pipeline, or architecture.
+
+6.  Disease Prediction System Type: Real Screenshot Purpose: Show the
+    deployed application interface and prediction results.
+
+7.  GitHub Repository Screenshots Type: Real Screenshot Purpose:
+    Demonstrate project organization and implementation quality.
+
+8.  Technology Icons Type: AI-Generated or Open-Source Icons Purpose:
+    Represent Python, FastAPI, Docker, AWS, PostgreSQL, and Machine
+    Learning consistently.
+
+======================================== 2. Style for AI-Generated
+Images ========================================
+
+Mood: Minimal, modern, technical, and professional.
+
+Visual Style: - Teal color palette - Soft gradients - Abstract geometric
+patterns - No people - No text - No 3D illustrations - Clean background
+with subtle depth
+
+All AI-generated visuals should follow the same design language to
+maintain consistency across the portfolio.
+
+======================================== 3. Real Images vs AI
+========================================
+
+Real Photo: - Professional headshot of Ahmed Sherif.
+
+Real Screenshots: - HouSmart - PersonaLLM - Real-Time ML System -
+Disease Prediction System - GitHub repositories
+
+AI-Generated Images: - Hero background - Decorative section
+backgrounds - Abstract AI-themed graphics
+
+Reason: Real work provides credibility and proof, while AI-generated
+visuals support the design without replacing evidence.
+
+======================================== 4. Rejected Image
+========================================
+
+Rejected Image: A futuristic AI illustration containing robots, glowing
+brains, and neon city backgrounds.
+
+Reason for Rejection: Although visually impressive, it distracted from
+the portfolio’s purpose and did not represent my real engineering work.
+It made the design feel generic instead of emphasizing authentic
+projects and technical proof.
+
+======================================== 5. Final Image Set (Keepers)
+========================================
+
+Keep: - Professional headshot (real) - HouSmart screenshots (real) -
+PersonaLLM screenshots (real) - Real-Time ML System screenshots (real) -
+Disease Prediction System screenshots (real) - GitHub repository
+screenshots (real) - Minimal teal abstract hero background
+(AI-generated) - Consistent technology icons
+
+======================================== Submission Checklist
+========================================
+
+[ ] Real profile photo included [ ] Real screenshots for every project [
+] AI-generated images share one consistent style [ ] Rejected image
+documented with explanation [ ] Final curated image set prepared

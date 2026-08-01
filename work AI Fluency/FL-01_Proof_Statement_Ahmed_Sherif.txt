@@ -1,0 +1,7 @@
+# Proof Statement
+
+I build production-ready AI systems that solve real business problems using machine learning, large language models, and scalable backend infrastructure. This portfolio is designed for **AI Engineering hiring managers** who are evaluating candidates for full-time AI/ML Engineer positions. Rather than simply listing technologies or projects, it demonstrates how I approach real engineering challenges, from designing and deploying AI solutions to building reliable, maintainable systems. If my work matches your team's needs, my goal is for you to **contact me to schedule an interview** and discuss how I can contribute as an AI Engineer.
+
+**Why this needs to exist**
+
+My CV and LinkedIn summarize my experience, but they cannot fully demonstrate how I solve engineering problems, make technical decisions, and build production-ready AI systems. This portfolio provides that proof through real projects and measurable results.

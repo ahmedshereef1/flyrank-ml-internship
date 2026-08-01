@@ -1,0 +1,72 @@
+FL-03 – Identity Kit Name: Ahmed Sherif Role: AI/ML Engineer | Data
+Scientist
+
+======================================== Identity Kit
+========================================
+
+1.  Typography
+
+Heading Font: Space Grotesk
+
+Body Font: Inter
+
+Reason: Space Grotesk provides a modern, technical appearance for
+headings, while Inter offers excellent readability for body text.
+
+======================================== 2. Color Palette
+========================================
+
+Primary Color: #0F766E (Teal)
+
+Text Color: #111827 (Near Black)
+
+Background Color: #F9FAFB (Near White)
+
+Accent Color: #14B8A6 (Light Teal)
+
+Reason: The palette is clean and calm, allowing projects and technical
+work to remain the main focus.
+
+======================================== 3. Logo / Favicon
+========================================
+
+Monogram: AS
+
+Design: The initials “AS” displayed in the Space Grotesk font with the
+primary teal color (#0F766E) on a white background. No additional icons
+or graphics are used to keep the branding simple and professional.
+
+======================================== 4. Style Note
+========================================
+
+Fonts: Space Grotesk for headings and Inter for body text.
+
+Colors: Primary #0F766E, Text #111827, Background #F9FAFB, Accent
+#14B8A6.
+
+Mood: Clean, modern, technical, and professional. The design should
+emphasize my AI engineering work without unnecessary decoration or
+visual clutter.
+
+======================================== 5. Claude Project Style
+Instructions ========================================
+
+Use the following design system consistently across every page of my
+portfolio:
+
+-   Heading Font: Space Grotesk
+-   Body Font: Inter
+-   Primary Color: #0F766E
+-   Text Color: #111827
+-   Background: #F9FAFB
+-   Accent Color: #14B8A6
+
+Always maintain a clean, modern, and minimal style that highlights
+technical projects instead of visual effects.
+
+======================================== Submission Checklist
+========================================
+
+[ ] Fonts selected [ ] Palette includes hex codes [ ] Simple
+logo/monogram (AS) [ ] Two-line style note [ ] Added style note to
+Claude Project

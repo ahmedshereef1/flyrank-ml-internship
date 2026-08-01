@@ -1,0 +1,136 @@
+FL-03 – Prompt Iteration Log Name: Ahmed Sherif
+
+FL-01 Target Task Build production-ready FastAPI APIs for AI
+applications.
+
+================================================== Version 0 – Naive
+Prompt ==================================================
+
+Prompt: Write a FastAPI API for user registration.
+
+Representative Output: The model generated a simple endpoint with basic
+request handling. The implementation lacked validation, project
+organization, security considerations, and production-quality practices.
+
+Observed Output Difference: This served as the baseline. The output was
+functional but too generic for real-world development.
+
+================================================== Version 1 –
+Technique: Role Assignment
+==================================================
+
+Prompt: You are a Senior Python Backend Engineer. Write a FastAPI API
+for user registration.
+
+Representative Output: The generated code followed better coding
+conventions and included cleaner function organization.
+
+Observed Output Difference: Assigning a role improved coding style and
+engineering terminology, but the implementation still lacked important
+project context.
+
+================================================== Version 2 –
+Technique: Context and Motivation
+==================================================
+
+Prompt: You are a Senior Python Backend Engineer. Build a
+production-ready FastAPI endpoint for user registration in an AI SaaS
+platform using PostgreSQL and SQLAlchemy. The code will be deployed in
+production and maintained by a development team.
+
+Representative Output: The model generated a more realistic API that
+matched the expected technology stack and considered maintainability.
+
+Observed Output Difference: Providing context made the solution
+significantly more relevant. The response stopped making unrealistic
+assumptions about the application.
+
+================================================== Version 3 –
+Technique: Few-Shot Examples
+==================================================
+
+Prompt: You are a Senior Python Backend Engineer.
+
+Example endpoint style: - Dependency Injection - Pydantic schemas -
+SQLAlchemy ORM - Consistent HTTP responses
+
+Now implement a user registration endpoint following the same style.
+
+Representative Output: The generated endpoint closely matched the
+provided coding style and maintained consistent naming conventions.
+
+Observed Output Difference: The output became much more consistent. The
+example influenced both structure and implementation quality.
+
+================================================== Version 4 –
+Technique: Output Structure
+==================================================
+
+Prompt: Create the endpoint using the following structure: 1. Pydantic
+Schema 2. SQLAlchemy Model 3. CRUD Function 4. FastAPI Router 5. Error
+Handling
+
+Return only Python code.
+
+Representative Output: The response became well organized and much
+easier to navigate. Each section appeared in a predictable order.
+
+Observed Output Difference: The improvement was primarily structural.
+The code became easier to review and integrate into an existing project.
+
+================================================== Version 5 –
+Technique: Step Decomposition
+==================================================
+
+Prompt: Before writing code: 1. Identify missing assumptions. 2. Explain
+your implementation plan. 3. Generate the Pydantic schema. 4. Generate
+the database logic. 5. Generate the router. 6. Verify the solution
+against production best practices.
+
+Representative Output: The model reasoned through the task before
+coding. It identified assumptions, generated cleaner components, and
+performed a final self-review.
+
+Observed Output Difference: Breaking the work into steps produced the
+most reliable output. The model made fewer incorrect assumptions and
+generated a more maintainable solution.
+
+================================================== Cross-Model
+Comparison ==================================================
+
+Claude Strengths: - Better reasoning before implementation. - More
+consistent architecture. - Stronger explanations of assumptions. -
+Cleaner organization.
+
+Weaknesses: - Sometimes more verbose than necessary. - May omit
+implementation details unless requested.
+
+ChatGPT Strengths: - Faster to produce complete code. - Practical
+implementation. - Good balance between explanation and code. - Strong
+Python syntax.
+
+Weaknesses: - More likely to assume missing project details. - Sometimes
+generates helper functions that do not exist.
+
+Summary: Claude produced a more carefully reasoned solution with
+stronger architectural consistency. ChatGPT generated
+implementation-ready code more quickly but occasionally relied on
+assumptions that required manual verification.
+
+================================================== Final Reusable Prompt
+Template ==================================================
+
+You are an experienced Senior Python Backend Engineer.
+
+Your task is to build a production-ready FastAPI feature.
+
+Project Information: - Framework: FastAPI - Database: PostgreSQL - ORM:
+SQLAlchemy - Validation: Pydantic
+
+Instructions: 1. Identify any missing assumptions. 2. Explain your
+implementation approach. 3. Follow clean architecture principles. 4. Use
+proper type hints. 5. Include validation and error handling. 6. Return
+code organized into: - Schema - Model - CRUD - Router 7. Verify that the
+implementation follows production best practices before finishing.
+
+Return only the final implementation after listing your assumptions.

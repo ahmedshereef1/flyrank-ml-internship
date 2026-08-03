@@ -1,0 +1,94 @@
+FL-01 Portfolio Planning Assignment Name: Ahmed Sherif Role: AI/ML
+Engineer | Data Scientist
+
+======================================== 1. One Person
+========================================
+
+Target Audience: Hiring managers and technical recruiters looking for an
+AI/ML Engineer who can build production-ready AI systems.
+
+======================================== 2. One Claim (Proof Statement)
+========================================
+
+I build production-ready AI and Machine Learning systems that solve
+real-world business problems using modern AI technologies, MLOps
+practices, and scalable cloud infrastructure.
+
+======================================== 3. One Action
+========================================
+
+Contact me for an AI Engineer interview or job opportunity.
+
+======================================== 4. Portfolio Sitemap
+========================================
+
+Home | |– Hero | - Headline | - Short introduction | - Call-to-Action
+(“Contact Me”) | |– Featured Projects | - HouSmart AI | - PersonaLLM | -
+Real-Time ML System | - Disease Prediction System | |– Skills | |– About
+Me | |– Contact
+
+Reasoning: - Home introduces my value immediately. - Featured Projects
+provide evidence supporting my claim. - Skills summarize my technical
+expertise. - About builds trust without unnecessary detail. - Contact
+leads visitors to the single desired action.
+
+No extra pages such as Blog, Gallery, Certificates, or Resume are
+included because they do not directly support my primary action.
+
+======================================== 5. Claude Project
+========================================
+
+Project Name: AI Portfolio Build
+
+Custom Instructions
+
+Who I Am: I am Ahmed Sherif, an AI/ML Engineer and Data Scientist
+building production-ready AI applications using Python, FastAPI, Machine
+Learning, Deep Learning, LLMs, Retrieval-Augmented Generation (RAG),
+Docker, AWS, PostgreSQL, and MLOps.
+
+Proof Statement: I build production-ready AI and Machine Learning
+systems that solve real-world business problems using modern AI
+technologies, MLOps practices, and scalable cloud infrastructure.
+
+Tutor Instructions: Act as my AI tutor throughout this portfolio
+project. Challenge weak ideas. Think like a hiring manager. Recommend
+improvements. Focus on simplicity, clarity, and strong technical proof.
+
+======================================== 6. Pressure-Test Prompt
+========================================
+
+You are acting as a senior engineering hiring manager.
+
+My portfolio claim is:
+
+“I build production-ready AI and Machine Learning systems that solve
+real-world business problems using modern AI technologies, MLOps
+practices, and scalable cloud infrastructure.”
+
+My primary action is:
+
+“Contact me for an AI Engineer interview.”
+
+My sitemap is: - Home - Featured Projects - Skills - About - Contact
+
+Pressure-test this sitemap.
+
+Identify: 1. Weaknesses. 2. Missing proof. 3. Pages that don’t earn
+their place. 4. Improvements that would increase recruiter confidence.
+5. Whether this sitemap strongly supports my primary action.
+
+======================================== 7. Expected Claude Feedback
+========================================
+
+Example improvement: Add measurable outcomes to every featured project,
+including model accuracy, deployment details, business impact, and
+GitHub links to strengthen the proof behind the portfolio claim.
+
+======================================== 8. Deliverables Checklist
+========================================
+
+[ ] Photo of sitemap sketch [ ] Screenshot of Claude Project
+configuration [ ] Screenshot of the pressure-test prompt [ ] Screenshot
+of Claude’s response [ ] Short note describing one improvement made
+after Claude’s feedback

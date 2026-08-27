@@ -1,0 +1,21 @@
+Explain It Like You Built It — Week 5
+Assignment: General AI Fluency Track
+======================================
+
+The piece I'm explaining: How the client-grouped train/test split works in my ML model notebook.
+
+---
+
+When I built the content decline prediction model in w05_model.ipynb, one of the trickiest parts was figuring out how to split the data into training and test sets. At first I thought you just shuffle everything randomly and take 80% for training. Turns out, for this dataset, that would have been a silent mistake.
+
+Here's the thing: our dataset has 30,000 rows of content items, but they belong to only 32 different clients. If I split randomly, a client's content shows up in both the training set and the test set. The model would essentially see examples from the same client during training, and then get "tested" on more examples from that same client. That's like a student studying a teacher's exact questions before the exam — the score looks great, but the student hasn't actually learned anything general.
+
+So instead I did what's called a grouped split — I split by client, not by row. I took the list of 32 clients, shuffled them, and put 26 clients in training and 6 clients in the test set. The model trains on some clients and gets evaluated on clients it has never seen at all.
+
+Why does this matter? Because the whole point of the model is to generalize — to flag declining content for any client, including new ones. If the test set is full of familiar clients, you're measuring memorization, not learning.
+
+Once I had that split, I trained two models: a Logistic Regression as the readable first step, and a Random Forest as the main model. The Random Forest hit 84% Precision@50 on the test clients — meaning 84 out of every 100 content items it flagged at the top were genuinely declining. The old rule-based baseline only got 28% on the same test, actually worse than just flipping a coin (which would get ~39% since that's the real decline rate in that test split).
+
+The grouped split is what makes that number honest. It's not just the model performing well on data it already knows — it's performing well on clients it's never touched.
+
+That's the one piece I had to actually think through, get wrong in my head first, and then understand properly. The split design is quiet — it's like four lines of code — but it's the thing that makes the whole comparison trustworthy.

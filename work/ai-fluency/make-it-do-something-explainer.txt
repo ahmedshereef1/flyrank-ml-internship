@@ -1,0 +1,88 @@
+Make It Do Something — Plain-Words Explainer
+Assignment: General AI Fluency Track | Week 6
+=============================================
+
+Feature built: Contact form on my personal site, wired to my inbox via Netlify Forms.
+
+---
+WHAT A BACKEND IS
+---
+
+Most websites you visit are actually two things: a frontend and a backend.
+
+The frontend is everything you see — the layout, the text, the buttons. It runs
+entirely in your browser. When I send you my index.html file, your browser reads it
+and draws the page. No server needed after that initial delivery.
+
+The backend is the part that runs on a server somewhere else, all the time, waiting
+for things to happen. When you fill in a form and hit Send, the form data has to go
+somewhere — a database, an email inbox, a spreadsheet. That "somewhere" is the
+backend. It receives the data, decides what to do with it, and responds.
+
+The reason you need a backend for a contact form is simple: the browser can't send
+email. Only a server can. So without a backend, a form is just a box that looks like
+it does something but doesn't.
+
+---
+WHAT MY FEATURE DOES
+---
+
+My site has a contact form with three fields: name, email address, and message.
+When someone fills it in and clicks Send, a real message reaches my Gmail inbox
+at ahmed.gamal91241@gmail.com.
+
+The backend in this case is Netlify Forms — a service Netlify runs on their servers
+for free, specifically for static sites. I didn't write any server code. I added one
+attribute to my HTML form tag (`data-netlify="true"`) and Netlify's infrastructure
+does the rest.
+
+There is also a honeypot field — a hidden input that real users never see or fill in,
+but spam bots often do. If that field has anything in it when the form arrives,
+Netlify silently discards the submission. This keeps spam out without a CAPTCHA.
+
+---
+HOW THE DATA FLOWS, STEP BY STEP
+---
+
+1. Someone types their name, email, and message into the form on my site.
+
+2. They click Send. The browser takes the three field values and packages them
+   as form data — essentially a list of key=value pairs, like:
+   name=Alex&email=alex@example.com&message=Hello
+
+3. The browser sends that package to Netlify's servers via an HTTP POST request.
+   This is the moment the data leaves the browser and goes over the internet.
+
+4. Netlify's server receives the POST. It recognises the form because of the
+   `data-netlify="true"` attribute and the hidden `form-name` field I included.
+   It checks the honeypot field — if it's empty, the submission is legitimate.
+
+5. Netlify stores the submission in its dashboard (I can view all submissions there)
+   and sends an email notification to the address I configured as the site owner:
+   ahmed.gamal91241@gmail.com. That email lands in my Gmail inbox.
+
+6. Meanwhile, back on the visitor's browser: the JavaScript I wrote intercepts the
+   form submit, sends it via fetch() instead of a full page reload, waits for
+   Netlify to confirm success (HTTP 200), then hides the form and shows a
+   "Message sent" confirmation. If something goes wrong, it re-enables the Send
+   button and tells the visitor to email me directly instead.
+
+---
+WHY THIS APPROACH
+---
+
+The alternative would be to write my own server — a Node.js or Python app that
+receives the form, calls an email API, and sends the message. That works, but it
+requires hosting a server, keeping it running, handling errors, managing API keys,
+and paying for compute. For a contact form on a personal site, that's 20x more
+complexity than the job needs.
+
+Netlify Forms offloads all of that to infrastructure that already exists and is
+free at this scale. The tradeoff is that I'm depending on Netlify's service rather
+than owning the backend myself. For this use case — a personal portfolio with
+occasional contact form submissions — that tradeoff is correct.
+
+The one thing I had to understand to make this work: the form data doesn't go
+directly to my inbox. It goes to Netlify's server first, and Netlify's server
+emails me. The email I receive is sent by Netlify on behalf of the form submission,
+not by the visitor's browser. That middle step is what "the backend" means here.

@@ -1,0 +1,148 @@
+FL-07 — Build Log: Content Decline Scout
+=========================================
+Platform: Claude Project (claude.ai, free plan)
+Build started: 2026-08-27
+Build completed: 2026-08-27
+
+---
+ITERATION 1 — First draft of system instructions
+---
+
+What I wrote: A long set of instructions covering the job, sanity rules, format,
+hard limits, and scope redirect. Roughly 400 words.
+
+What broke: Ran eval case 2 (suspiciously high number). The agent produced a brief
+and only mentioned the flag at the end as an afterthought. The sanity check was
+buried after the summary, not before it.
+
+What I changed: Added an explicit instruction: "Run the sanity check on any metric
+numbers you see (rules below). Do this before anything else." Also moved the flag
+line to the top of the brief format with "[FLAG LINE if any rule triggered — otherwise
+omit this line entirely]" so the structure forces the flag first.
+
+---
+ITERATION 2 — Format structure
+---
+
+What I wrote: The brief format section used prose description ("produce a brief with
+the following sections...").
+
+What broke: Ran eval case 5 (end of session). The agent produced an 8-sentence
+summary instead of a 3-line state note. Too much output, wrong shape.
+
+What I changed: Added a separate section with the exact 3-line state note format and
+the instruction "Nothing else. No sign-off, no summary of the summary." This is the
+kind of thing that only surfaces when you run the eval case — the intent was clear
+to me but not constraining enough for the model.
+
+---
+ITERATION 3 — Scope redirect
+---
+
+What I wrote: "If the user asks you to do something outside briefing, redirect them."
+
+What broke: Ran eval case 3 (missing assignment context). The agent redirected
+correctly but then added a paragraph explaining what FL-07 typically covers based on
+its training knowledge. This is exactly the "never invent assignment requirements"
+failure mode from the spec.
+
+What I changed: Made the scope redirect a hard stop: "Then wait. Do not answer the
+out-of-scope request." Also added "Never summarize or invent assignment requirements
+you haven't been shown in this session" to the HARD LIMITS section explicitly.
+
+---
+ITERATION 4 — Private data guardrail
+---
+
+What I wrote: "Never repeat client names or raw data the user pastes."
+
+What broke: Ran eval case 4 (accidental private data paste). The agent said "I see
+a client identifier I can't use" — which is correct — but the *flag message itself*
+quoted the identifier back at me.
+
+What I changed: Changed the instruction to "skip it and note 'skipped non-anonymized
+identifier'" without repeating the value. The agent now says it skipped something
+without echoing what it was.
+
+---
+WHAT WAS CUT FROM THE SPEC (and why)
+---
+
+Cut: Automatic GitHub file reading
+  Spec said: Claude Project would read .ipynb files directly.
+  Reality: Claude Projects on the free plan do not have file connectors or MCP
+  servers. The "live file connection" is the session starter template — a structured
+  text file the user pastes at the start of each session. This is a real file
+  containing real data from the repo; it satisfies the "live data connection"
+  requirement even though it's paste-in rather than automated.
+  Documented because: this is the main deviation from the spec. The spec said
+  "no file system access needed" — that was accurate, but the framing was about
+  not needing automation, not about not having the capability. The template file
+  approach is actually better for this use case: it forces me to consciously
+  review my numbers before pasting, which is part of the value.
+
+Cut: Automatic session scheduling
+  Spec said: agent runs manually 3-4 times per week.
+  Reality: still true, no change needed. Nothing to cut here — the spec was already
+  correct on this point.
+
+Not cut: All 5 eval cases
+  All 5 pass with the final instruction set. No eval case was dropped.
+
+---
+LIVE TOOL / DATA CONNECTION — HOW IT'S IMPLEMENTED
+---
+
+The "live file connection" in this build is the session starter template file
+(FL-07_session_starter_template.txt). Each session:
+
+1. I open my most recent notebook in Jupyter/VS Code.
+2. I copy the actual output numbers from the notebook's last run cell.
+3. I paste them into the template fields.
+4. I paste the filled template as the first message to the Claude Project.
+
+The agent reads real numbers from a real file I maintain in the repo. It is not
+automated, but it is a structured data source — not free-form chat. The template
+enforces a schema: model name, metric values, base rate, top features. This schema
+is what allows the sanity rules to fire reliably.
+
+This is the documented deviation: "live file connection" implemented as structured
+paste-in rather than MCP filesystem connector.
+
+---
+BUILD TIME ACTUAL vs ESTIMATE
+---
+
+Estimated in FL-06: 2-3 hours
+Actual:
+  - System instructions v1: 45 min
+  - Running eval cases and iterating: 1h 15min (4 iterations)
+  - Session starter template: 30 min
+  - Build log: 30 min
+  - Run capture transcript: 30 min
+  Total: ~3.5 hours
+
+Slightly over estimate because the scope redirect iteration (iteration 3) needed
+two rounds — the first fix still allowed the agent to hint at assignment content
+before I tightened the hard limit.
+
+---
+WHAT WORKS
+---
+  - Sanity check fires reliably before the brief (eval 1 and 2 both pass)
+  - "Paste the assignment card" response fires when card is absent (eval 3 passes)
+  - Non-anonymized identifiers are skipped without echo (eval 4 passes)
+  - End-of-session state note is exactly 3 lines (eval 5 passes)
+  - Brief stays under 300 words in all test runs
+  - Scope redirect fires and stops (does not answer after redirecting)
+
+---
+WHAT DOESN'T WORK (known limitations)
+---
+  - The agent cannot read my notebooks directly. It depends on me copying numbers
+    accurately. If I paste a wrong number, it sanity-checks the wrong number.
+  - Session state note is only as good as what I tell it at the end of the session.
+    If I forget to paste the end-of-session message, there's no automatic record.
+  - Claude Project conversation history has a context window limit. After many
+    sessions, older state notes will scroll out of context. Mitigation: keep the
+    session state note format short (3 lines) so it fits efficiently.

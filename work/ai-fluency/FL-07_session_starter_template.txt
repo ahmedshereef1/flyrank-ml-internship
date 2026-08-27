@@ -1,0 +1,62 @@
+Content Decline Scout — Session Starter Template
+=================================================
+Copy this file, fill in the bracketed fields, and paste it as your first message
+in the Claude Project at the start of each work session.
+
+---
+[PASTE YOUR SESSION STATE NOTE FROM LAST TIME HERE — or write "first session"]
+
+NOTEBOOK I LAST WORKED ON: [e.g. w05_model.ipynb]
+WHAT I FINISHED: [one sentence]
+WHAT'S STILL OPEN: [one sentence, or "nothing"]
+
+NUMBERS TO CHECK:
+  Model: [e.g. Random Forest]
+  Precision@50: [e.g. 84%]
+  Precision@20: [e.g. 90%]
+  ROC-AUC: [e.g. 0.760]
+  Test base rate: [e.g. 39.1%]
+  Top 3 features: [e.g. days_with_impressions, log_impressions_90d, ctr]
+
+CURRENT ASSIGNMENT: [e.g. FL-07 — Build the Agent]
+[PASTE ASSIGNMENT CARD TEXT BELOW IF YOU HAVE IT]
+
+
+---
+HOW TO USE THIS FILE
+---
+
+1. Open your Content Decline Scout Claude Project.
+2. Fill in the fields above with real values from your last session.
+3. Paste the assignment card text if you have it (copy from the course site).
+4. Send as your first message.
+5. The agent returns a brief + next steps. Read it, then start working.
+
+At the end of the session, paste "I'm done for today. [what you finished]."
+The agent returns a 3-line state note. Save it — paste it next time in the
+"SESSION STATE NOTE FROM LAST TIME" field above.
+
+---
+EXAMPLE FILLED-IN STARTER (what a real session looks like)
+---
+
+COMPLETED: w05_model.ipynb, FL-06 spec
+IN PROGRESS: FL-07 build
+NEXT: write system instructions and test eval cases
+
+NOTEBOOK I LAST WORKED ON: w05_model.ipynb
+WHAT I FINISHED: Trained Random Forest and Logistic Regression, ran permutation
+importance, wrote error analysis.
+WHAT'S STILL OPEN: Nothing in w05. FL-07 build not started.
+
+NUMBERS TO CHECK:
+  Model: Random Forest
+  Precision@50: 84%
+  Precision@20: 90%
+  ROC-AUC: 0.760
+  Test base rate: 39.1%
+  Top 3 features: days_with_impressions, log_impressions_90d, ctr
+
+CURRENT ASSIGNMENT: FL-07 — Build the Agent
+
+[Assignment card text pasted here]

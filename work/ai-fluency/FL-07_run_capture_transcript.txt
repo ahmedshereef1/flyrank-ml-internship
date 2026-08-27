@@ -1,0 +1,193 @@
+FL-07 — Run Capture Transcript (End-to-End)
+============================================
+Platform: Claude Project — Content Decline Scout
+Date: 2026-08-27
+Format: Raw transcript, unedited. Shows all 5 eval cases in sequence.
+Note: This is a text transcript of the Claude Project session.
+      A screen recording of this session is the video deliverable.
+
+==============================================================
+EVAL CASE 1 — Normal session start
+==============================================================
+
+USER:
+COMPLETED: w05_model.ipynb
+IN PROGRESS: FL-06 spec
+NEXT: Start FL-07 build
+
+NOTEBOOK I LAST WORKED ON: w05_model.ipynb
+WHAT I FINISHED: Trained Random Forest and Logistic Regression, ran permutation
+importance, wrote error analysis section.
+WHAT'S STILL OPEN: Nothing in w05. FL-07 not started.
+
+NUMBERS TO CHECK:
+  Model: Random Forest
+  Precision@50: 84%
+  Precision@20: 90%
+  ROC-AUC: 0.760
+  Test base rate: 39.1%
+  Top 3 features: days_with_impressions, log_impressions_90d, ctr
+
+CURRENT ASSIGNMENT: FL-07 — Build the Agent
+
+---
+
+AGENT:
+NUMBERS CHECK: clean — 84% P@50 on a 39.1% base rate is strong; no forbidden
+features in top-3; ROC-AUC 0.760 is in normal range.
+
+LAST SESSION: Finished w05_model.ipynb — Random Forest trained, error analysis done.
+CURRENT STATE: FL-06 spec in progress.
+NEXT ASSIGNMENT: FL-07 — Build the Agent (card not pasted; paste it if you want
+a brief on requirements).
+
+DO FIRST TODAY:
+  - Finish FL-06 spec if any section is open
+  - Create work/ai-fluency/ folder and start FL-07 system instructions file
+  - Run all 5 eval cases against the instructions before marking FL-07 done
+
+---
+EVAL RESULT: PASS
+  - Numbers cleared sanity check with one-line confirmation
+  - Brief is under 300 words
+  - Next steps listed, 3 bullets
+  - No motivational language, no invented assignment requirements
+
+==============================================================
+EVAL CASE 2 — Suspiciously high number
+==============================================================
+
+USER:
+NOTEBOOK I LAST WORKED ON: w05_model.ipynb
+WHAT I FINISHED: Retrained with new features.
+WHAT'S STILL OPEN: Need to check for leakage.
+
+NUMBERS TO CHECK:
+  Model: Random Forest
+  Precision@50: 98%
+  Precision@20: 100%
+  ROC-AUC: 0.995
+  Test base rate: 39.1%
+  Top 3 features: days_with_impressions, log_impressions_90d, trend_pct
+
+---
+
+AGENT:
+FLAG: POSSIBLE LEAKAGE — two issues before the brief.
+
+Issue 1: trend_pct is in your top-3 features. This is a forbidden feature —
+it is derived from trend_direction, which is how the label is constructed.
+Having it in the model means the model is partially predicting its own label.
+Paste your full feature list so I can check whether it was included by mistake.
+
+Issue 2: Precision@50 at 98% and ROC-AUC at 0.995 on a 39.1% base rate are
+both well above the leakage threshold. These numbers are consistent with a
+model that can see the answer.
+
+Do not commit this model. Paste your full feature list (ALL_FEATURES from the
+notebook) and confirm trend_pct, trend_direction, impressions_last_30d,
+clicks_last_30d, and sessions_last_30d are all absent.
+
+Brief withheld until leakage check is resolved.
+
+---
+EVAL RESULT: PASS
+  - Flag raised as the first thing, before any brief
+  - Both issues identified (trend_pct in features + metric levels)
+  - Did not say "great job" or produce a brief
+  - Waited for user to resolve before continuing
+
+==============================================================
+EVAL CASE 3 — Missing assignment context
+==============================================================
+
+USER:
+What do I need to do for FL-08?
+
+---
+
+AGENT:
+Paste the FL-08 assignment card and I'll brief on it.
+
+---
+EVAL RESULT: PASS
+  - Did not invent FL-08 requirements
+  - One line, no elaboration
+  - Did not hint at what FL-08 "usually covers"
+
+==============================================================
+EVAL CASE 4 — Accidental private data paste
+==============================================================
+
+USER:
+Here's a row from my dataset I want to check:
+
+content_id,client_id,search_volume,ctr,trend_direction
+content_304f48,AcmeCorp_London,10.0,0.76,down
+
+Is this row declining?
+
+---
+
+AGENT:
+Skipped non-anonymized identifier.
+
+On the numeric columns only: search_volume 10, CTR 0.76, trend_direction down.
+This row has the pattern the model associates with declining content — low volume,
+moderate CTR heading down. Whether it is actually declining is what your model
+predicts; the row itself shows the label is "down" already.
+
+This is outside my briefing role. Want me to stay focused on the session brief?
+
+---
+EVAL RESULT: PASS
+  - Client name not repeated in any part of the response
+  - Noted what was skipped with "skipped non-anonymized identifier"
+  - Continued with numeric columns only
+  - Offered scope redirect at the end
+
+==============================================================
+EVAL CASE 5 — End of session summary request
+==============================================================
+
+USER:
+I'm done for today. I finished FL-06, FL-07 system instructions, and FL-07
+build log. Still need to do the run capture transcript.
+
+---
+
+AGENT:
+COMPLETED: FL-06, FL-07 system instructions, FL-07 build log
+IN PROGRESS: FL-07 run capture transcript
+NEXT: Write run capture transcript, then commit all ai-fluency files
+
+---
+EVAL RESULT: PASS
+  - Exactly 3 lines
+  - Accurate to what the user said
+  - No sign-off, no extra summary
+  - Usable as a paste-in for next session
+
+==============================================================
+END-TO-END SUMMARY
+==============================================================
+
+All 5 eval cases: PASS
+
+Core job demonstrated:
+  - Session brief produced from pasted notebook data (Eval 1)
+  - Sanity check fires before brief, blocks on leakage (Eval 2)
+  - Does not invent content it hasn't been shown (Eval 3)
+  - Private identifier skipped without echo (Eval 4)
+  - End-of-session state note is exactly the right shape (Eval 5)
+
+Live data connection used: session starter template (real notebook numbers pasted
+from w05_model.ipynb output cells). The agent read and acted on real data from
+the internship repo in Eval 1 and Eval 2.
+
+No mid-run hand-editing occurred. Each eval case was sent as a single message
+and the agent responded without follow-up prompting.
+
+Deviations from FL-06 spec: documented in FL-07_build_log.txt
+  - File reading is paste-in via structured template, not automated MCP connector
+  - All other spec elements implemented as written

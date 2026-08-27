@@ -1,0 +1,108 @@
+PF-04 — DNS Walkthrough
+Assignment: Personal Website Live on the FlyRank Domain
+========================================================
+Written in plain words, as if explaining to a non-technical teammate.
+
+---
+WHAT DNS ACTUALLY DOES
+---
+
+DNS stands for Domain Name System. Its job is simple: translate a human-readable
+address (like ahmedsherif.netlify.app) into a machine-readable IP address (like
+75.2.60.5) that servers on the internet actually understand.
+
+Your browser doesn't know what "ahmedsherif.netlify.app" means on its own.
+It only knows how to connect to numbered addresses. DNS is the phonebook that
+sits between the name you type and the number the server actually lives at.
+
+---
+WHAT HAPPENS WHEN SOMEONE TYPES YOUR URL
+---
+
+Let's say someone types ahmedsherif.netlify.app into their browser and hits Enter.
+Here is what happens, step by step:
+
+Step 1 — The browser checks its own memory first.
+If it has looked up this address recently, it remembers the answer (this is called
+a cache). If it does, it skips straight to the end and connects. If not, it moves
+to Step 2.
+
+Step 2 — The browser asks the recursive resolver.
+Your internet provider (ISP) runs a server called a recursive resolver. Think of it
+as a librarian: it doesn't know all the answers, but it knows exactly who to ask.
+Your browser sends the domain name to this resolver and waits.
+
+Step 3 — The resolver works up the chain.
+The resolver asks a root nameserver: "Who is responsible for addresses ending
+in .app?" The root nameserver doesn't answer the full question — it just points
+to the next stop: the .app top-level domain (TLD) nameserver.
+
+The resolver then asks the TLD nameserver: "Who is responsible for netlify.app?"
+That nameserver points to Netlify's own nameservers.
+
+Step 4 — The resolver asks Netlify's nameserver.
+Netlify's nameserver holds the actual record for ahmedsherif.netlify.app.
+It responds with an IP address — the real location of the server that will serve
+the website. The resolver caches this answer (so future lookups are faster) and
+sends it back to the browser.
+
+Step 5 — The browser connects.
+Now the browser has an IP address. It opens a connection to that server, the server
+sends back the HTML, CSS, and Javascript files, and the page appears on screen.
+
+The whole process — Steps 2 through 5 — typically takes less than 50 milliseconds.
+It feels instant.
+
+---
+WHAT A CNAME RECORD IS
+---
+
+A CNAME (Canonical Name) record is a type of DNS record that says: "this name is
+an alias for another name." Instead of pointing directly to an IP address, it points
+to a different domain name, and the resolver follows that name to find the actual IP.
+
+Example from this project:
+If I connected a custom domain like ahmed-sherif.com to Netlify, I would create
+a CNAME record that says:
+
+  www.ahmed-sherif.com  →  ahmedsherif.netlify.app
+
+What that means: "Whenever anyone looks up www.ahmed-sherif.com, go look up
+ahmedsherif.netlify.app instead and use whatever IP address you find there."
+
+This is useful because Netlify's IP addresses can change — they use load balancers
+and edge servers that may be updated over time. By pointing to a domain name
+(the CNAME) rather than a fixed IP (an A record), my site automatically follows
+Netlify to wherever they move without me needing to update anything.
+
+The trade-off: CNAME adds one extra lookup step (resolve the alias, then resolve
+the target). In practice the extra time is negligible — a few milliseconds at most,
+and usually cached.
+
+---
+HOW HTTPS APPEARS AUTOMATICALLY ON NETLIFY
+---
+
+When I deploy a site to Netlify, HTTPS appears without me doing anything. Here is
+why: Netlify automatically requests an SSL/TLS certificate from Let's Encrypt (a
+free, trusted certificate authority) and installs it on my site's domain. The
+padlock in the browser means the connection between the visitor's browser and
+Netlify's server is encrypted — no one in between can read the traffic.
+
+On a custom domain, Netlify waits until DNS has propagated (meaning the CNAME or
+A record is live and resolving correctly) and then provisions the certificate. This
+can take a few minutes to a few hours, but it requires no manual action on my part.
+
+---
+WHY THIS MATTERS
+---
+
+Understanding DNS means that if something ever breaks — a custom domain stops
+working, the padlock disappears, a redirect fails — I know which layer to check.
+Is the CNAME record pointing to the right place? Has DNS propagated yet? Is the
+certificate provisioned? These are all answerable questions once you know what
+each part of the system does.
+
+Following a tutorial to set up DNS without understanding it means you can set it up
+once, but you cannot fix it when it breaks. Understanding it means you own the
+infrastructure rather than just operating it.

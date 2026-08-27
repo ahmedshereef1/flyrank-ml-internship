@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahmed Sherif</title>
+<meta name="description" content="ML intern at FlyRank building a content decline prediction model that helps SEO teams prioritize which pages to refresh.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  /* ── Tokens ── */
+  :root {
+    --bg:         #0D1B2A;
+    --bg-card:    #152235;
+    --border:     rgba(255,255,255,0.08);
+    --text:       #F0EDE6;
+    --text-muted: #8FA3B8;
+    --accent:     #C9A84C;
+    --accent-dim: rgba(201,168,76,0.12);
+    --link-hover: #D4B86A;
+    --radius:     6px;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg:         #F7F5F0;
+      --bg-card:    #FFFFFF;
+      --border:     rgba(0,0,0,0.08);
+      --text:       #0D1B2A;
+      --text-muted: #5A7085;
+      --accent:     #9C7A28;
+      --accent-dim: rgba(156,122,40,0.10);
+      --link-hover: #7A5E1A;
+    }
+  }
+
+  :root[data-theme="light"] {
+    --bg:         #F7F5F0;
+    --bg-card:    #FFFFFF;
+    --border:     rgba(0,0,0,0.08);
+    --text:       #0D1B2A;
+    --text-muted: #5A7085;
+    --accent:     #9C7A28;
+    --accent-dim: rgba(156,122,40,0.10);
+    --link-hover: #7A5E1A;
+  }
+
+  :root[data-theme="dark"] {
+    --bg:         #0D1B2A;
+    --bg-card:    #152235;
+    --border:     rgba(255,255,255,0.08);
+    --text:       #F0EDE6;
+    --text-muted: #8FA3B8;
+    --accent:     #C9A84C;
+    --accent-dim: rgba(201,168,76,0.12);
+    --link-hover: #D4B86A;
+  }
+
+  /* ── Reset ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  /* ── Layout ── */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── Nav ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+
+  nav .inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.15s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 96px 0 72px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 520px;
+    line-height: 1.75;
+  }
+
+  /* ── Sections ── */
+  section {
+    padding: 64px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  section:last-of-type { border-bottom: none; }
+
+  h2 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 20px;
+    text-wrap: balance;
+  }
+
+  p {
+    color: var(--text-muted);
+    font-size: 0.97rem;
+    line-height: 1.8;
+    max-width: 600px;
+  }
+
+  p + p { margin-top: 14px; }
+
+  /* ── Build card ── */
+  .build-card {
+    margin-top: 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+  }
+
+  .build-card .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .build-card p {
+    font-size: 0.94rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  /* ── Links grid ── */
+  .links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 8px;
+  }
+
+  .link-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .link-card:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+    color: var(--text);
+  }
+
+  .link-card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .link-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .link-icon svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--accent);
+  }
+
+  .link-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .link-meta span {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  /* ── Stack list ── */
+  .stack-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.73rem;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+  }
+
+  /* ── Footer ── */
+  footer {
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  footer .inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    max-width: none;
+  }
+
+  .theme-toggle {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .theme-toggle:hover { color: var(--text); border-color: var(--accent); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+
+  @media (max-width: 480px) {
+    .nav-links { display: none; }
+    .hero { padding: 64px 0 48px; }
+  }
+</style>
+</head>
+<body>
+
+<nav aria-label="Site navigation">
+  <div class="inner">
+    <a href="#" class="nav-name">Ahmed Sherif</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#building">Building</a></li>
+      <li><a href="#links">Links</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <div class="container">
+
+    <header class="hero">
+      <p class="eyebrow">ML Intern · FlyRank</p>
+      <h1>Ahmed Sherif — <em>machine learning</em> in the service of content.</h1>
+      <p class="hero-sub">
+        I'm an ML intern building a content decline prediction model that helps SEO teams
+        prioritize which pages to refresh — turning messy search signals into a ranked,
+        actionable queue.
+      </p>
+    </header>
+
+    <section id="about" aria-labelledby="about-heading">
+      <h2 id="about-heading">About</h2>
+      <p>
+        I work at the intersection of data and product — taking raw signals like click-through
+        rate, content age, and search volume and turning them into something a content team
+        can actually act on. My background is in data science, and I spend most of my time
+        in Python, pandas, and scikit-learn.
+      </p>
+      <p>
+        At FlyRank I've moved from research question all the way through feature engineering,
+        baseline scoring, and a full model comparison — Random Forest against a rule-based
+        baseline — with client-grouped validation to keep the numbers honest.
+      </p>
+      <div class="stack-list" aria-label="Technical stack">
+        <span class="tag">Python</span>
+        <span class="tag">pandas</span>
+        <span class="tag">scikit-learn</span>
+        <span class="tag">Jupyter</span>
+        <span class="tag">Random Forest</span>
+        <span class="tag">Precision@K</span>
+        <span class="tag">feature engineering</span>
+        <span class="tag">ML design</span>
+      </div>
+    </section>
+
+    <section id="building" aria-labelledby="building-heading">
+      <h2 id="building-heading">What I'm building</h2>
+      <p>
+        The core question: <strong style="color:var(--text)">which content pages should a team review first?</strong>
+        Not every page, not the obvious ones — the ones where the signal pattern
+        says decline is underway before traffic has visibly dropped.
+      </p>
+      <p>
+        The model classifies each page as declining or stable using 29 features
+        (search, engagement, freshness, position signals) and ranks the output
+        into a prioritized queue. The metric that matters is Precision@50 — of
+        the top 50 items flagged, how many are actually declining.
+      </p>
+      <div class="build-card">
+        <p class="label">Latest result</p>
+        <p>
+          Random Forest: <strong style="color:var(--text)">84% Precision@50</strong> on held-out clients
+          (39% base rate). Rule-based baseline: 28%. The gap closes the case for
+          using a model over a spreadsheet formula.
+        </p>
+      </div>
+    </section>
+
+    <section id="links" aria-labelledby="links-heading">
+      <h2 id="links-heading">Find me</h2>
+      <div class="links-grid">
+
+        <a class="link-card" href="https://linkedin.com/in/ahmed-sherif-096804264" target="_blank" rel="noopener noreferrer">
+          <div class="link-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+          </div>
+          <div class="link-meta">
+            LinkedIn
+            <span>ahmed-sherif-096804264</span>
+          </div>
+        </a>
+
+        <a class="link-card" href="https://github.com/ahmedshereef1" target="_blank" rel="noopener noreferrer">
+          <div class="link-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+            </svg>
+          </div>
+          <div class="link-meta">
+            GitHub
+            <span>ahmedshereef1</span>
+          </div>
+        </a>
+
+        <a class="link-card" href="https://drive.google.com/file/d/1pa0eYJ2YGM_bAVYKSBXJWTBcBQJUmPd_/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+          <div class="link-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/>
+            </svg>
+          </div>
+          <div class="link-meta">
+            CV / Résumé
+            <span>View PDF</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="inner">
+    <p>Ahmed Sherif · ML Intern at FlyRank · 2026</p>
+    <button class="theme-toggle" id="themeBtn" aria-label="Toggle light/dark theme">Toggle theme</button>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var btn = document.getElementById('themeBtn');
+    var root = document.documentElement;
+    var stored;
+    try { stored = localStorage.getItem('theme'); } catch (e) {}
+    if (stored) root.setAttribute('data-theme', stored);
+
+    btn.addEventListener('click', function () {
+      var current = root.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+  })();
+</script>
+
+</body>
+</html>

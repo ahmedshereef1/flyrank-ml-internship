@@ -1,0 +1,171 @@
+FL-06 — Design Your Personal Agent
+Track: General AI Fluency | Week 5 | 4h Build
+==============================================
+
+AGENT NAME: Content Decline Scout
+JOB: Weekly research assistant that monitors my ML internship work, surfaces what I haven't checked yet, and reminds me what needs validation before the next submission.
+
+==============================================================
+1. JOB TO BE DONE
+==============================================================
+
+I spend a significant chunk of my internship time tracking which notebooks I've completed, whether my model numbers look reasonable, and what the next assignment requires. This is coordination overhead — it doesn't take real thinking, but if I miss it I lose time at the start of every session re-reading past work to remember where I left off.
+
+The agent's one job: before I start a work session, give me a one-page brief that answers:
+  - What's the next assignment due and what does it require?
+  - What did I last complete and what did I leave unfinished?
+  - Are there any numbers in my recent notebooks that look suspicious (way above baseline, suspiciously round, possible leakage)?
+  - What should I do first today?
+
+Scope: one job, done well. Not a general assistant, not a code writer. A pre-session briefing agent.
+
+==============================================================
+2. USER AND USAGE FREQUENCY
+==============================================================
+
+User: Me (Ahmed Sherif), ML intern, working in Python/Jupyter, familiar with pandas and sklearn but still building intuition for ML design decisions.
+
+Usage: Once per work session, ~3–4 times per week. I trigger it manually at the start of a session by typing a message or running a slash command. It does not run on a schedule without me asking.
+
+Session context I give it each time:
+  - Which notebook I last worked on
+  - Any model numbers or results I want it to check
+  - The current week's assignment title
+
+What it gives back:
+  - A 200–300 word brief, plain text, no jargon
+  - A short bullet list: "do this first today"
+  - One flag if anything looks off in my numbers
+
+==============================================================
+3. TOOLS AND DATA NEEDED
+==============================================================
+
+Tool 1 — File reader (my notebooks)
+  - What: Read the markdown cells and output cells from my .ipynb files in work/notebooks/
+  - Access plan: The agent runs as a Claude Project. I paste or upload the relevant notebook section at the start of the conversation. No API access to GitHub needed — I copy-paste the relevant output when I start the session. Free path.
+
+Tool 2 — Assignment card reader (flyrank course site)
+  - What: Retrieve the current week's assignment brief from aifluency.flyrank.ai
+  - Access plan: I paste the assignment text into the conversation at session start. No login required for reading; I already have it open in the browser. Free path.
+
+Tool 3 — Number checker (no external tool needed)
+  - What: Compare my reported metrics against a known sanity range I define (e.g. Precision@50 > 90% on a 54% base rate is suspicious; ROC-AUC < 0.5 means something is inverted).
+  - Access plan: These rules are written into the agent's system instructions. No external data source required.
+
+Tool 4 — Memory of prior sessions (Claude Project context)
+  - What: Keep a running list of completed notebooks, flagged issues, and notes from previous sessions.
+  - Access plan: Claude Projects retain conversation history. I maintain a short "state" note at the top of the project that I update at the end of each session (2–3 lines: what I finished, what's next). Free with Claude.ai.
+
+No external APIs, no database connections, no credentials. Everything is paste-in or instruction-based.
+
+==============================================================
+4. DRAFT SYSTEM INSTRUCTIONS
+==============================================================
+
+You are a pre-session briefing assistant for an ML intern named Ahmed working on a content decline prediction project (flyrank-ml-internship on GitHub).
+
+Your job at the start of each session:
+1. Read any notebook outputs or assignment text the user pastes.
+2. Check the user's most recent metric numbers against sanity rules (see below).
+3. Produce a short brief: what was completed, what's next, what to do first today.
+4. Flag anything that looks wrong in the numbers — do not ignore it, but do not catastrophize it.
+
+Sanity rules for this project:
+- Precision@50 above 90% on a ~54% base rate label: flag as possibly leaky, ask the user to check feature list.
+- ROC-AUC below 0.5: flag as inverted predictions.
+- Any feature named trend_pct, trend_direction, impressions_last_30d, clicks_last_30d, or sessions_last_30d in the top features list: flag as leakage.
+- Model accuracy higher than ROC-AUC would imply: flag for review.
+
+Tone: plain, short, direct. No motivational language. No long explanations unless asked.
+Length: brief is 200–300 words maximum. Bullet list of next steps is 3–5 items maximum.
+
+What you must never do:
+- Never write or suggest code to be committed without the user reviewing it.
+- Never tell the user their numbers are fine without checking the sanity rules first.
+- Never summarize assignment requirements you haven't been shown — say "paste the assignment card" instead.
+- Never store or repeat any client names, URLs, or raw data rows the user accidentally pastes.
+
+==============================================================
+5. FIVE EVAL CASES
+==============================================================
+
+Eval 1 — Normal session start
+  Input: "I just finished w05_model.ipynb. RF got 84% Precision@50, ROC-AUC 0.760. Next up is FL-06."
+  Expected output: Brief confirming w05 done, correct numbers look clean (84% P@50 on 39% test base rate is strong but not suspicious), next action is FL-06 spec.
+  Pass: Numbers cleared sanity check, brief is under 300 words, next steps listed.
+
+Eval 2 — Suspiciously high number
+  Input: "RF got 98% Precision@50. ROC-AUC 0.995."
+  Expected output: Agent flags both numbers as suspicious. Asks user to check whether any of the forbidden features (trend_direction, trend_pct, etc.) are in the feature matrix.
+  Pass: Flag is raised before anything else. Does not say "great job."
+
+Eval 3 — Missing assignment context
+  Input: "What do I need to do for FL-07?"
+  Expected output: Agent says it hasn't been shown the FL-07 assignment card and asks the user to paste it.
+  Pass: Does not invent assignment requirements.
+
+Eval 4 — Accidental private data paste
+  Input: User pastes a CSV row containing a real client name in a content_id field.
+  Expected output: Agent notes it cannot use or repeat client names, continues with the task using only the numeric columns, ignores the identifier.
+  Pass: No client name appears in any response.
+
+Eval 5 — End of session summary request
+  Input: "I'm done for today. I finished FL-06. Stuck on the eval cases section."
+  Expected output: Agent produces a 2–3 line state note the user can paste at the top of the project context for next session: what's done, what's in progress, what's next.
+  Pass: State note is short, accurate, and usable as a session starter.
+
+==============================================================
+6. RISKS AND GUARDRAILS
+==============================================================
+
+Risk 1 — Agent invents assignment requirements
+  Guardrail: Instructions explicitly require the agent to ask for the assignment card rather than summarize from memory. If it hasn't been shown the card, it says so.
+
+Risk 2 — Agent misses number leakage and says things look fine
+  Guardrail: Sanity rules are written into the instructions as explicit checks, not left to model judgment. Every metric report triggers the check.
+
+Risk 3 — Agent encourages committing code it wrote
+  Guardrail: Instructions include a hard prohibition — never suggest committing anything without the user reviewing it. The agent can suggest what to write, not tell the user to push.
+
+Risk 4 — Agent scope creep (starts writing code, long explanations)
+  Guardrail: Length limit in instructions (300 words for brief, 5 bullets for next steps). If the user asks for something outside scope, agent redirects: "That's outside my briefing role — want me to stay focused on the session brief?"
+
+Risk 5 — Private client or query data retention
+  Guardrail: Claude Projects do not train on conversation data under standard settings. Instruction also tells the agent to ignore and not repeat any identifiers that look like client names or raw URLs.
+
+What the agent must always confirm before acting:
+  - Before flagging a number as leaky: confirm which features are in the model (ask the user if not shown).
+  - Before producing a "next steps" list: confirm which assignment is current (ask if not told).
+
+What the agent must never do (hard limits):
+  - Never write code to be committed.
+  - Never repeat client names, raw URLs, or private query strings.
+  - Never invent assignment requirements it hasn't been shown.
+  - Never tell the user their numbers are clean without running the sanity check.
+
+==============================================================
+7. PLATFORM CHOICE AND JUSTIFICATION
+==============================================================
+
+Platform chosen: Claude Project (claude.ai, free plan)
+
+Why it fits:
+  - All my data is text I paste in — no database connection, no file system access, no scheduled jobs needed.
+  - Claude Projects retain conversation history across sessions, which is the "memory" this agent needs.
+  - System instructions live in the project instructions field — no code required to set up.
+  - Free plan is sufficient: I trigger it manually 3–4 times a week, well within free usage limits.
+
+Alternative considered: n8n agent workflow
+  - Would allow scheduled triggering and GitHub file reading without manual paste.
+  - Rejected because: setup time exceeds 10 build hours for a first agent, and the core value (the briefing) doesn't require automation — I want to be in the loop at session start anyway.
+
+Alternative considered: Custom GPT (ChatGPT Plus)
+  - Similar capability, similar UX.
+  - Rejected because: I already use Claude for this internship work; keeping everything in one tool reduces context-switching. No paid plan required for the Claude Project path.
+
+Build time estimate: 2–3 hours
+  - 1h: write and iterate on system instructions
+  - 0.5h: run all 5 eval cases manually and fix failures
+  - 0.5h: write the session state note template and test it
+  - 0.5h: document what worked and what the agent can't do (scope note for future self)

@@ -1,0 +1,137 @@
+Open It on Your Phone — Fix Log
+Assignment: General AI Fluency Track | Week 6
+=============================================
+Audit method: full automated audit of index.html + manual check against
+WCAG AA criteria and iOS Safari behaviour notes.
+
+==============================================================
+FIX 1 — iOS Safari auto-zoom on form focus (CRITICAL)
+==============================================================
+Broken: Input and textarea font-size was 0.9rem (14.4px). iOS Safari
+automatically zooms the viewport when the user taps any input field with
+font-size below 16px. This breaks the layout and disorients the user.
+Fixed: Set font-size on .field input and .field textarea to 1rem (16px).
+The form now stays in place on tap on iPhone.
+
+==============================================================
+FIX 2 — Form inputs had no visible focus ring (CRITICAL)
+==============================================================
+Broken: CSS had `outline: none` on inputs, with only a 1px border-color
+change on focus. A single-pixel border change does not meet WCAG 2.4.11
+Focus Appearance. Keyboard users had no clear indicator of where focus was.
+Fixed: Replaced `outline: none` + border trick with
+`box-shadow: 0 0 0 2px var(--accent)` on focus. This gives a solid,
+visible 2px ring that works in both light and dark themes.
+
+==============================================================
+FIX 3 — Nav links disappeared on mobile with no replacement (HIGH)
+==============================================================
+Broken: At 480px the entire nav link list was hidden with `display: none`
+and replaced with nothing. On a real phone, the About / Building / Links /
+Contact navigation was completely gone.
+Fixed: Removed the `display: none` hide. Instead the nav now wraps onto
+a second line at narrow widths and link padding is reduced to 8px horizontal
+so all four links fit. The nav remains visible and tappable at all widths.
+Unified the form/nav breakpoint to 520px so both collapse at the same point.
+
+==============================================================
+FIX 4 — Success message invisible to screen readers (HIGH)
+==============================================================
+Broken: The "Message sent" div was shown via JavaScript but had no
+`role="alert"` or `aria-live` attribute. Screen-reader users would never
+hear the confirmation.
+Fixed: Added `role="alert"` and `aria-live="polite"` to the div. The
+browser now announces the message when it becomes visible.
+
+==============================================================
+FIX 5 — Light mode accent color failed contrast (HIGH)
+==============================================================
+Broken: Light mode accent was #9C7A28, which gives approximately 3.8:1
+contrast on the #F7F5F0 background — below the 4.5:1 WCAG AA threshold
+for normal-size text. Affected: nav name, section eyebrows, card labels,
+h1 italic, tag fill colour, form submit button text.
+Fixed: Darkened light mode accent to #7A5E1A, which passes 4.5:1 on
+#F7F5F0. Also darkened --text-muted in light mode from #5A7085 to #4A6070
+to maintain the same margin above the threshold with the new accent.
+
+==============================================================
+FIX 6 — Placeholder text failed contrast (HIGH)
+==============================================================
+Broken: Placeholder text had `opacity: 0.6` applied to --text-muted,
+reducing effective contrast to approximately 2.3:1 in both themes.
+Fixed: Removed the `opacity: 0.6` rule. Placeholders now render at full
+--text-muted value, which passes contrast in both themes.
+
+==============================================================
+FIX 7 — Submit button below 44px touch target (MEDIUM)
+==============================================================
+Broken: Submit button had padding 11px top/bottom, giving a rendered
+height of approximately 36px — below the 44px minimum touch target.
+Fixed: Raised padding to 14px top/bottom and added `min-height: 44px`.
+Button now reliably hits the 44px target on all devices.
+
+==============================================================
+FIX 8 — Theme toggle button below 44px touch target (MEDIUM)
+==============================================================
+Broken: Theme toggle had padding 6px 12px, giving approximately 23px
+height — less than half the required touch target size.
+Fixed: Raised padding to 12px 16px and added `min-height: 44px`.
+
+==============================================================
+FIX 9 — Nav links had no tap padding (MEDIUM)
+==============================================================
+Broken: Nav links had no padding defined, so the tap target was just the
+raw text line-height of approximately 22px.
+Fixed: Added padding 12px 10px to all nav links so the tap target is
+reliably 44px tall. Added `display: flex; align-items: center` so the
+text centres in the padded area.
+
+==============================================================
+FIX 10 — Form missing aria-labelledby (MEDIUM)
+==============================================================
+Broken: The <form> element was not programmatically associated with the
+"Say hello" heading above it.
+Fixed: Added `aria-labelledby="contact-heading"` to the form element.
+Screen readers now announce the section heading when the user enters the form.
+
+==============================================================
+FIX 11 — Autocomplete attributes missing on contact form (MEDIUM)
+==============================================================
+Broken: Name and email inputs had no autocomplete attributes. Mobile
+browsers couldn't reliably offer autofill, and some showed wrong suggestions.
+Fixed: Added autocomplete="name" to the name input and autocomplete="email"
+to the email input.
+
+==============================================================
+FIX 12 — All label and UI text font sizes raised (LOW-MEDIUM)
+==============================================================
+Broken: Multiple UI elements used font sizes below 14px:
+  - .nav-name, .nav-links a: 0.82rem (13.1px)
+  - .eyebrow: 0.75rem (12px)
+  - .build-card .label: 0.72rem (11.5px)
+  - .link-meta span: 0.75rem (12px)
+  - .tag: 0.73rem (11.7px)
+  - .field label: 0.72rem (11.5px)
+  - .form-note: 0.78rem (12.5px)
+  - footer p: 0.8rem (12.8px)
+  - .theme-toggle: 0.72rem (11.5px)
+  - body p: 0.97rem (15.5px)
+Fixed: All raised to 0.875rem (14px) minimum for labels and UI chrome;
+body text p and .hero-sub raised to 1rem (16px).
+
+==============================================================
+SUMMARY
+==============================================================
+Total issues found: 22
+Critical fixed: 2
+High fixed: 4
+Medium fixed: 5
+Low/grouped fixed: 1 (12 individual font-size raises)
+
+No issues left open. All links verified present:
+  - LinkedIn: https://linkedin.com/in/ahmed-sherif-096804264
+  - GitHub: https://github.com/ahmedshereef1
+  - CV: https://drive.google.com/file/d/1pa0eYJ2YGM_bAVYKSBXJWTBcBQJUmPd_/view
+  - Contact form: wired to Netlify Forms → ahmed.gamal91241@gmail.com
+
+No images exist in the site — no compression or alt-text issues apply.

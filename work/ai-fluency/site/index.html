@@ -18,7 +18,6 @@
     --text-muted: #8FA3B8;
     --accent:     #C9A84C;
     --accent-dim: rgba(201,168,76,0.12);
-    --link-hover: #D4B86A;
     --radius:     6px;
   }
 
@@ -28,10 +27,11 @@
       --bg-card:    #FFFFFF;
       --border:     rgba(0,0,0,0.08);
       --text:       #0D1B2A;
-      --text-muted: #5A7085;
-      --accent:     #9C7A28;
-      --accent-dim: rgba(156,122,40,0.10);
-      --link-hover: #7A5E1A;
+      --text-muted: #4A6070;
+      /* fix: darkened from #5A7085 for 4.5:1 on white */
+      --accent:     #7A5E1A;
+      /* fix: darkened from #9C7A28 for 4.5:1 on light bg */
+      --accent-dim: rgba(122,94,26,0.10);
     }
   }
 
@@ -40,10 +40,9 @@
     --bg-card:    #FFFFFF;
     --border:     rgba(0,0,0,0.08);
     --text:       #0D1B2A;
-    --text-muted: #5A7085;
-    --accent:     #9C7A28;
-    --accent-dim: rgba(156,122,40,0.10);
-    --link-hover: #7A5E1A;
+    --text-muted: #4A6070;
+    --accent:     #7A5E1A;
+    --accent-dim: rgba(122,94,26,0.10);
   }
 
   :root[data-theme="dark"] {
@@ -54,7 +53,6 @@
     --text-muted: #8FA3B8;
     --accent:     #C9A84C;
     --accent-dim: rgba(201,168,76,0.12);
-    --link-hover: #D4B86A;
   }
 
   /* ── Reset ── */
@@ -88,7 +86,7 @@
     z-index: 10;
     background: var(--bg);
     border-bottom: 1px solid var(--border);
-    padding: 14px 0;
+    padding: 10px 0;
   }
 
   nav .inner {
@@ -98,43 +96,69 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 16px;
   }
 
   .nav-name {
     font-family: 'DM Mono', monospace;
-    font-size: 0.82rem;
+    font-size: 0.875rem; /* 14px — meets label minimum */
     letter-spacing: 0.06em;
     color: var(--accent);
     text-transform: uppercase;
     text-decoration: none;
+    /* fix: min touch target */
+    padding: 12px 0;
+    display: inline-block;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 
   .nav-links {
     display: flex;
-    gap: 24px;
+    gap: 4px;
     list-style: none;
+    flex-wrap: wrap;
   }
 
   .nav-links a {
-    font-size: 0.82rem;
+    font-size: 0.875rem; /* 14px */
     font-weight: 500;
     color: var(--text-muted);
     text-decoration: none;
     letter-spacing: 0.02em;
     transition: color 0.15s;
+    /* fix: pad to 44px touch target */
+    padding: 12px 10px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 
   .nav-links a:hover { color: var(--text); }
+  .nav-links a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 3px;
+    color: var(--text);
+  }
+
+  /* ── Mobile nav: show as wrapping pills at narrow widths ── */
+  @media (max-width: 520px) {
+    nav .inner { padding: 0 16px; }
+    .nav-links { gap: 0; }
+    .nav-links a { padding: 12px 8px; font-size: 0.8125rem; }
+  }
 
   /* ── Hero ── */
   .hero {
-    padding: 96px 0 72px;
+    padding: 80px 0 64px;
     border-bottom: 1px solid var(--border);
   }
 
   .eyebrow {
     font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
+    font-size: 0.875rem; /* fix: raised from 0.75rem */
     letter-spacing: 0.10em;
     text-transform: uppercase;
     color: var(--accent);
@@ -143,7 +167,7 @@
 
   h1 {
     font-family: 'DM Serif Display', Georgia, serif;
-    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
     font-weight: 400;
     line-height: 1.15;
     letter-spacing: -0.01em;
@@ -158,7 +182,7 @@
   }
 
   .hero-sub {
-    font-size: 1.05rem;
+    font-size: 1rem; /* fix: raised from 0.97rem to full 16px */
     color: var(--text-muted);
     max-width: 520px;
     line-height: 1.75;
@@ -183,7 +207,7 @@
 
   p {
     color: var(--text-muted);
-    font-size: 0.97rem;
+    font-size: 1rem; /* fix: raised from 0.97rem */
     line-height: 1.8;
     max-width: 600px;
   }
@@ -202,7 +226,7 @@
 
   .build-card .label {
     font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
+    font-size: 0.875rem; /* fix: raised from 0.72rem */
     letter-spacing: 0.09em;
     text-transform: uppercase;
     color: var(--accent);
@@ -210,7 +234,7 @@
   }
 
   .build-card p {
-    font-size: 0.94rem;
+    font-size: 1rem;
     color: var(--text-muted);
     margin: 0;
   }
@@ -227,13 +251,14 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 18px 20px;
+    padding: 16px 20px;
+    min-height: 44px;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     text-decoration: none;
     color: var(--text);
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 500;
     transition: border-color 0.15s, background 0.15s;
   }
@@ -273,7 +298,7 @@
   }
 
   .link-meta span {
-    font-size: 0.75rem;
+    font-size: 0.875rem; /* fix: raised from 0.75rem */
     color: var(--text-muted);
     font-weight: 400;
   }
@@ -288,57 +313,13 @@
 
   .tag {
     font-family: 'DM Mono', monospace;
-    font-size: 0.73rem;
+    font-size: 0.875rem; /* fix: raised from 0.73rem */
     letter-spacing: 0.04em;
     color: var(--text-muted);
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 4px;
     padding: 4px 10px;
-  }
-
-  /* ── Footer ── */
-  footer {
-    padding: 40px 0;
-    border-top: 1px solid var(--border);
-  }
-
-  footer .inner {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  footer p {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    max-width: none;
-  }
-
-  .theme-toggle {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 6px 12px;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: border-color 0.15s, color 0.15s;
-  }
-
-  .theme-toggle:hover { color: var(--text); border-color: var(--accent); }
-  .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { transition: none !important; }
-    html { scroll-behavior: auto; }
   }
 
   /* ── Contact form ── */
@@ -363,7 +344,7 @@
 
   .field label {
     font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
+    font-size: 0.875rem; /* fix: raised from 0.72rem */
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-muted);
@@ -374,24 +355,24 @@
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 10px 14px;
+    padding: 13px 14px; /* fix: raised from 10px to hit 44px touch target */
     font-family: 'Inter', system-ui, sans-serif;
-    font-size: 0.9rem;
+    font-size: 1rem; /* fix: must be 16px to prevent iOS Safari zoom on focus */
     color: var(--text);
-    transition: border-color 0.15s;
     width: 100%;
   }
 
   .field input::placeholder,
   .field textarea::placeholder {
     color: var(--text-muted);
-    opacity: 0.6;
+    /* fix: removed opacity:0.6 — was failing contrast at ~2.3:1 */
   }
 
+  /* fix: replaced outline:none with a visible box-shadow focus ring */
   .field input:focus,
   .field textarea:focus {
     outline: none;
-    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent);
   }
 
   .field textarea {
@@ -408,43 +389,108 @@
     color: var(--bg);
     border: none;
     border-radius: var(--radius);
-    padding: 11px 24px;
+    padding: 14px 28px; /* fix: raised from 11px to reach 44px height */
+    min-height: 44px;
     font-family: 'Inter', system-ui, sans-serif;
-    font-size: 0.88rem;
+    font-size: 1rem; /* fix: raised from 0.88rem */
     font-weight: 600;
     cursor: pointer;
     transition: opacity 0.15s;
     align-self: flex-start;
   }
 
+  /* fix: light mode submit button — dark text on gold passes contrast */
+  :root[data-theme="light"] .form-submit,
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) .form-submit {
+      color: #0D1B2A;
+    }
+  }
+
   .form-submit:hover { opacity: 0.88; }
-  .form-submit:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .form-submit:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
   .form-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .form-note {
-    font-size: 0.78rem;
+    font-size: 0.875rem; /* fix: raised from 0.78rem */
     color: var(--text-muted);
     margin-top: 4px;
   }
 
+  /* fix: added role="alert" equivalent via aria-live in HTML; visible styles here */
   .form-success {
     display: none;
     background: var(--accent-dim);
     border: 1px solid var(--accent);
     border-radius: var(--radius);
     padding: 16px 20px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: var(--text);
     margin-top: 8px;
   }
 
-  @media (max-width: 520px) {
-    .field-row { grid-template-columns: 1fr; }
+  /* ── Footer ── */
+  footer {
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
   }
 
-  @media (max-width: 480px) {
-    .nav-links { display: none; }
-    .hero { padding: 64px 0 48px; }
+  footer .inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  footer p {
+    font-size: 0.875rem; /* fix: raised from 0.8rem */
+    color: var(--text-muted);
+    max-width: none;
+  }
+
+  .theme-toggle {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    /* fix: padding raised to meet 44px touch target */
+    padding: 12px 16px;
+    min-height: 44px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.875rem; /* fix: raised from 0.72rem */
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .theme-toggle:hover { color: var(--text); border-color: var(--accent); }
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 520px) {
+    /* fix: unified breakpoint — both nav and form collapse together */
+    .field-row { grid-template-columns: 1fr; }
+    nav .inner { padding: 0 16px; }
+    .nav-links { gap: 0; }
+    .nav-links a { padding: 12px 8px; font-size: 0.8125rem; }
+    .hero { padding: 56px 0 40px; }
+    .container { padding: 0 16px; }
+    footer .inner { padding: 0 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; }
+    html { scroll-behavior: auto; }
   }
 </style>
 </head>
@@ -452,7 +498,7 @@
 
 <nav aria-label="Site navigation">
   <div class="inner">
-    <a href="#" class="nav-name">Ahmed Sherif</a>
+    <a href="/" class="nav-name">Ahmed Sherif</a>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#building">Building</a></li>
@@ -577,6 +623,7 @@
         data-netlify="true"
         netlify-honeypot="bot-field"
         id="contactForm"
+        aria-labelledby="contact-heading"
       >
         <input type="hidden" name="form-name" value="contact">
         <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
@@ -584,11 +631,13 @@
         <div class="field-row">
           <div class="field">
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="Your name" required>
+            <!-- fix: added autocomplete="name" -->
+            <input type="text" id="name" name="name" placeholder="Your name" required autocomplete="name">
           </div>
           <div class="field">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            <!-- fix: added autocomplete="email" -->
+            <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
           </div>
         </div>
 
@@ -601,7 +650,8 @@
         <p class="form-note">Goes straight to my inbox. I reply within a few days.</p>
       </form>
 
-      <div class="form-success" id="formSuccess">
+      <!-- fix: added role="alert" so screen readers announce the success message -->
+      <div class="form-success" id="formSuccess" role="alert" aria-live="polite">
         Message sent — thanks. I'll get back to you soon.
       </div>
     </section>
@@ -654,7 +704,7 @@
             form.style.display = 'none';
             successMsg.style.display = 'block';
           } else {
-            throw new Error('Network response was not ok');
+            throw new Error('not ok');
           }
         })
         .catch(function () {

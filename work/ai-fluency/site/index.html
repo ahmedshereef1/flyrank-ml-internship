@@ -3,8 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ahmed Sherif</title>
+<title>Ahmed Sherif — ML Intern, Content Decline Prediction</title>
 <meta name="description" content="ML intern at FlyRank building a content decline prediction model that helps SEO teams prioritize which pages to refresh.">
+<link rel="canonical" href="https://ahmedsherif565.netlify.app/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ahmedsherif565.netlify.app/">
+<meta property="og:title" content="Ahmed Sherif — ML Intern, Content Decline Prediction">
+<meta property="og:description" content="Building a Random Forest model that ranks content pages by decline risk — 84% Precision@50 vs 39% base rate on held-out clients.">
+<meta property="og:image" content="https://ahmedsherif565.netlify.app/og-preview.png">
+<!-- Twitter card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ahmed Sherif — ML Intern, Content Decline Prediction">
+<meta name="twitter:description" content="Building a Random Forest model that ranks content pages by decline risk — 84% Precision@50 vs 39% base rate on held-out clients.">
+<!-- Netlify Analytics — zero-config, no cookie, GDPR-friendly -->
+<script defer src="https://cdn.jsdelivr.net/npm/@netlify/analytics@1/dist/analytics.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
@@ -662,7 +676,15 @@
 <footer>
   <div class="inner">
     <p>Ahmed Sherif · ML Intern at FlyRank · 2026</p>
-    <button class="theme-toggle" id="themeBtn" aria-label="Toggle light/dark theme">Toggle theme</button>
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <!-- BADGE: replace this comment with your badge <a>…</a> block once you have your Credential ID from internship-badge.netlify.app -->
+      <a id="flyrank-badge" href="https://internship.flyrank.ai/verify" target="_blank" rel="noopener noreferrer"
+         aria-label="FlyRank AI Internship credential — verification pending"
+         style="display:inline-block;opacity:0.55;font-family:ui-monospace,monospace;font-size:0.75rem;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:6px 12px;text-decoration:none">
+        FlyRank AI Internship ↗
+      </a>
+      <button class="theme-toggle" id="themeBtn" aria-label="Toggle light/dark theme">Toggle theme</button>
+    </div>
   </div>
 </footer>
 
@@ -677,6 +699,10 @@
 
     btn.addEventListener('click', function () {
       var current = root.getAttribute('data-theme');
+      // if no explicit theme set yet, read system preference as the starting point
+      if (!current) {
+        current = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
       var next = current === 'dark' ? 'light' : 'dark';
       root.setAttribute('data-theme', next);
       try { localStorage.setItem('theme', next); } catch (e) {}

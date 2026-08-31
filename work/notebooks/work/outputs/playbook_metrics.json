@@ -1,0 +1,30 @@
+{
+  "model": "RandomForest (n_estimators=200, max_depth=12, min_samples_leaf=10)",
+  "split": "client-grouped 80/20",
+  "train_clients": 26,
+  "test_clients": 6,
+  "train_rows": 27675,
+  "test_rows": 2325,
+  "base_rate_test": 0.391,
+  "precision_at_20": 0.9,
+  "precision_at_50": 0.84,
+  "roc_auc": 0.76,
+  "retrain_trigger_precision_threshold": 0.65,
+  "top_features": [
+    {
+      "feature": "days_with_impressions",
+      "importance_mean": 0.1147
+    },
+    {
+      "feature": "log_impressions_90d",
+      "importance_mean": 0.0345
+    },
+    {
+      "feature": "ctr",
+      "importance_mean": 0.0167
+    }
+  ],
+  "label_source": "is_declining_label derived from trend_direction (= trend_pct < 0)",
+  "data_vintage": "90-day snapshot, single cross-section",
+  "snapshot_date_note": "data/raw/content_refresh_anonymized.csv \u2014 trailing 90 days"
+}

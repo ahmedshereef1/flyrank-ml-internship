@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Can Search Signals Predict Content Decline? — Ahmed Sherif, FlyRank ML Internship</title>
+<meta name="description" content="A Random Forest classifier trained on 30,000 content items ranks declining pages with 84% Precision@50 — 2.1× better than random and ahead of a rule-based baseline (28%).">
+<link rel="canonical" href="https://ahmedshereef1.github.io/flyrank-ml-internship/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Can Search Signals Predict Content Decline?">
+<meta property="og:description" content="Random Forest achieves 84% Precision@50 on held-out clients — 2.1× the base rate — ranking which content pages to refresh first.">
+<meta property="og:url" content="https://ahmedshereef1.github.io/flyrank-ml-internship/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Can Search Signals Predict Content Decline?">
+<meta name="twitter:description" content="Random Forest achieves 84% Precision@50 on held-out clients — 2.1× the base rate. FlyRank ML Internship capstone.">
+<style>
+  :root {
+    --bg: #0D1B2A;
+    --bg-card: #152235;
+    --border: rgba(255,255,255,0.08);
+    --text: #F0EDE6;
+    --text-muted: #8FA3B8;
+    --accent: #C9A84C;
+    --accent-dim: rgba(201,168,76,0.12);
+    --radius: 6px;
+    --max: 740px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #F7F5F0; --bg-card: #FFFFFF;
+      --border: rgba(0,0,0,0.08); --text: #0D1B2A;
+      --text-muted: #4A6070; --accent: #7A5E1A;
+      --accent-dim: rgba(122,94,26,0.10);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F7F5F0; --bg-card: #FFFFFF; --border: rgba(0,0,0,0.08);
+    --text: #0D1B2A; --text-muted: #4A6070; --accent: #7A5E1A;
+    --accent-dim: rgba(122,94,26,0.10);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0D1B2A; --bg-card: #152235; --border: rgba(255,255,255,0.08);
+    --text: #F0EDE6; --text-muted: #8FA3B8; --accent: #C9A84C;
+    --accent-dim: rgba(201,168,76,0.12);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Georgia', serif; line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Nav */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 10px 0;
+  }
+  nav .inner {
+    max-width: var(--max); margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .nav-name {
+    font-family: 'Courier New', monospace; font-size: 0.8rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); text-decoration: none;
+    min-height: 44px; display: flex; align-items: center;
+  }
+  .nav-links { display: flex; gap: 0; list-style: none; flex-wrap: wrap; }
+  .nav-links a {
+    font-family: 'Georgia', serif; font-size: 0.875rem;
+    color: var(--text-muted); text-decoration: none;
+    padding: 12px 10px; min-height: 44px; display: flex; align-items: center;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  @media (max-width: 520px) {
+    .nav-links a { padding: 10px 7px; font-size: 0.8rem; }
+  }
+  /* Layout */
+  .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  /* Header */
+  .paper-header {
+    padding: 72px 0 56px; border-bottom: 1px solid var(--border);
+  }
+  .paper-venue {
+    font-family: 'Courier New', monospace; font-size: 0.8rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 20px;
+  }
+  h1 {
+    font-family: 'Georgia', serif; font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 700; line-height: 1.2; letter-spacing: -0.01em;
+    color: var(--text); margin-bottom: 28px;
+  }
+  .paper-meta {
+    font-family: 'Courier New', monospace; font-size: 0.85rem;
+    color: var(--text-muted); line-height: 1.6;
+  }
+  .paper-meta strong { color: var(--text); }
+  /* Abstract box */
+  .abstract {
+    margin-top: 36px; background: var(--bg-card);
+    border: 1px solid var(--border); border-left: 3px solid var(--accent);
+    border-radius: var(--radius); padding: 24px 28px;
+  }
+  .abstract-label {
+    font-family: 'Courier New', monospace; font-size: 0.75rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 12px;
+  }
+  .abstract p { font-size: 0.975rem; color: var(--text-muted); line-height: 1.8; }
+  /* Sections */
+  section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  h2 {
+    font-family: 'Georgia', serif; font-size: 1.5rem;
+    font-weight: 700; color: var(--text); margin-bottom: 20px;
+  }
+  h3 {
+    font-family: 'Georgia', serif; font-size: 1.1rem;
+    font-weight: 700; color: var(--text); margin: 28px 0 12px;
+  }
+  p { color: var(--text-muted); font-size: 1rem; line-height: 1.85; max-width: 660px; }
+  p + p { margin-top: 14px; }
+  /* Code / mono */
+  code {
+    font-family: 'Courier New', monospace; font-size: 0.875rem;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 3px; padding: 1px 5px; color: var(--accent);
+  }
+  /* Tables */
+  .table-wrap { overflow-x: auto; margin: 24px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+  th {
+    font-family: 'Courier New', monospace; font-size: 0.75rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); text-align: left;
+    padding: 10px 14px; border-bottom: 2px solid var(--border);
+  }
+  td { padding: 10px 14px; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { color: var(--text); font-weight: 600; }
+  .highlight-row td { color: var(--accent); }
+  /* Figures */
+  .figure { margin: 32px 0; }
+  .figure img {
+    width: 100%; border-radius: var(--radius);
+    border: 1px solid var(--border); display: block;
+  }
+  .figure figcaption {
+    margin-top: 10px; font-size: 0.875rem;
+    color: var(--text-muted); font-style: italic; line-height: 1.5;
+  }
+  /* Stat tiles */
+  .stat-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px; margin: 28px 0;
+  }
+  .stat-tile {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 18px; text-align: center;
+  }
+  .stat-tile .num {
+    font-family: 'Courier New', monospace; font-size: 2rem;
+    font-weight: 700; color: var(--accent); display: block; line-height: 1;
+  }
+  .stat-tile .lbl {
+    font-size: 0.8rem; color: var(--text-muted);
+    margin-top: 6px; display: block; line-height: 1.4;
+  }
+  /* Action table */
+  .action-table { margin: 24px 0; }
+  .action-row {
+    display: grid; grid-template-columns: 1fr 2fr 1.5fr;
+    gap: 0; border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  .action-row.header {
+    font-family: 'Courier New', monospace; font-size: 0.75rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+  }
+  .action-row .code { font-family: 'Courier New', monospace; font-size: 0.85rem; color: var(--text); }
+  .action-row .desc { font-size: 0.9rem; color: var(--text-muted); padding: 0 12px; }
+  .action-row .act { font-size: 0.9rem; color: var(--text-muted); }
+  @media (max-width: 520px) {
+    .action-row { grid-template-columns: 1fr; gap: 4px; }
+    .action-row .desc { padding: 0; }
+  }
+  /* Lists */
+  ul, ol { color: var(--text-muted); padding-left: 20px; }
+  li { margin-bottom: 8px; line-height: 1.7; font-size: 1rem; }
+  li strong { color: var(--text); }
+  /* Limit card */
+  .limit-list { list-style: none; padding: 0; margin-top: 16px; }
+  .limit-list li {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px 18px; margin-bottom: 10px;
+    font-size: 0.95rem;
+  }
+  .limit-list li strong { color: var(--accent); display: block; margin-bottom: 4px; font-size: 0.85rem; font-family: 'Courier New', monospace; letter-spacing: 0.05em; text-transform: uppercase; }
+  /* Links */
+  a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+  a:hover { opacity: 0.8; }
+  /* Notebook links */
+  .notebook-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .notebook-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 10px 16px;
+    font-family: 'Courier New', monospace; font-size: 0.85rem;
+    color: var(--text); text-decoration: none;
+    transition: border-color 0.15s;
+  }
+  .notebook-link:hover { border-color: var(--accent); color: var(--text); }
+  /* Footer */
+  footer {
+    padding: 40px 0; border-top: 1px solid var(--border);
+    margin-top: 0;
+  }
+  footer .inner {
+    max-width: var(--max); margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  footer p { font-size: 0.875rem; color: var(--text-muted); max-width: none; }
+  footer a { color: var(--accent); }
+  .theme-toggle {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 10px 16px; min-height: 44px;
+    font-family: 'Courier New', monospace; font-size: 0.8rem;
+    color: var(--text-muted); cursor: pointer; transition: border-color 0.15s;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--text); }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<nav aria-label="Paper navigation">
+  <div class="inner">
+    <a href="#" class="nav-name">Ahmed Sherif</a>
+    <ul class="nav-links">
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#data">Data</a></li>
+      <li><a href="#methodology">Methods</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#recommendations">Actions</a></li>
+      <li><a href="#reproducibility">Code</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+<div class="container">
+
+  <header class="paper-header">
+    <p class="paper-venue">FlyRank ML Internship · Capstone · August 2026</p>
+    <h1>Can Search Signals Predict Content Decline Before Traffic Drops?</h1>
+    <p class="paper-meta">
+      <strong>Ahmed Sherif</strong> — ML Intern, FlyRank<br>
+      Dataset: FlyRank Internship Dataset (30,000 content items, 32 pseudonymized clients, 90-day snapshot)<br>
+      Model: Random Forest classifier · Client-grouped validation · Metric: Precision@K
+    </p>
+
+    <div class="abstract" id="abstract">
+      <p class="abstract-label">Abstract</p>
+      <p>
+        Content teams managing large portfolios need to know which pages to refresh first — before
+        traffic has visibly dropped. This study asks: can a snapshot of search and engagement signals
+        predict which content items are currently in decline? Using a 30,000-item cross-sectional
+        dataset from 32 pseudonymized client portfolios, a Random Forest classifier was trained to
+        rank items by their estimated decline probability using 29 features spanning search volume,
+        engagement, freshness, and position. On six held-out clients never seen during training, the
+        model achieved <strong>84% Precision@50</strong> — meaning 42 of every 50 top-flagged items
+        carried the observed decline label — compared to a 39% base rate and a 28% rule-based
+        baseline. The output is a ranked decision-support queue for human review, not an automated
+        system: it surfaces which pages deserve attention first, while a human reviewer confirms
+        each recommendation before acting.
+      </p>
+    </div>
+  </header>
+
+  <!-- 1. INTRODUCTION -->
+  <section id="introduction" aria-labelledby="intro-heading">
+    <h2 id="intro-heading">Introduction</h2>
+    <p>
+      A content team managing 30,000 pages cannot review them all each week. The typical fallback
+      is a spreadsheet rule: flag anything older than 90 days with high search volume. That rule is
+      transparent and cheap to run — but does it work?
+    </p>
+    <p>
+      In this dataset, the rule-based baseline achieves only 28% Precision@50 on held-out clients,
+      <em>below the 39% base rate</em>. This means the rule is a worse-than-random guide on unseen
+      clients: it flags pages that are less likely to be declining than a random draw would be.
+    </p>
+    <p>
+      The research question is direct: <strong>can a machine learning model trained on search and
+      engagement signals rank declining content items meaningfully better than the rule?</strong>
+      The answer this work reports: on six held-out clients, yes — from 28% to 84% Precision@50,
+      a 3× improvement over the rule and a 2.1× improvement over chance. The result is framed
+      as decision-support: a ranked queue a human editor uses to prioritise their review week,
+      not an autonomous content management system.
+    </p>
+  </section>
+
+  <!-- 2. DATA -->
+  <section id="data" aria-labelledby="data-heading">
+    <h2 id="data-heading">Data</h2>
+    <p>
+      The dataset is the <strong>FlyRank ML Internship starter dataset</strong>
+      (<code>content_refresh_anonymized.csv</code>) — a 30,000-row cross-sectional snapshot of
+      content items across 32 pseudonymized client portfolios, with trailing-90-day metrics
+      captured at a single point in time. All identifiers are pseudonymized; no client names,
+      URLs, or raw search queries appear in this work.
+    </p>
+
+    <h3>Key statistics</h3>
+    <div class="stat-row">
+      <div class="stat-tile"><span class="num">30k</span><span class="lbl">content items</span></div>
+      <div class="stat-tile"><span class="num">32</span><span class="lbl">pseudonymized clients</span></div>
+      <div class="stat-tile"><span class="num">44</span><span class="lbl">columns</span></div>
+      <div class="stat-tile"><span class="num">54%</span><span class="lbl">overall decline rate</span></div>
+      <div class="stat-tile"><span class="num">90d</span><span class="lbl">trailing window</span></div>
+    </div>
+
+    <h3>Label definition</h3>
+    <p>
+      <code>is_declining_label = 1</code> when <code>trend_direction == "down"</code>.
+      <code>trend_direction</code> is derived from <code>trend_pct</code> — the ratio of
+      impressions in the last 30 days versus the prior 30 days. This is an observational label
+      within the same 90-day snapshot; it does not represent a prospective measurement.
+    </p>
+
+    <h3>What was excluded and why</h3>
+    <ul>
+      <li><strong>trend_direction, trend_pct</strong> — excluded as features because they are the direct source of the label (leakage).</li>
+      <li><strong>impressions_last_30d, clicks_last_30d, sessions_last_30d</strong> — excluded because they overlap the label's measurement window (future leakage).</li>
+      <li><strong>content_id, client_id</strong> — excluded as identifier columns, not signals.</li>
+      <li><strong>avg_position = 0</strong> — recoded to NaN then filled with the column median; zero means "no data" in this dataset, not rank zero.</li>
+    </ul>
+
+    <h3>Gotchas honoured</h3>
+    <p>
+      Rate columns (<code>ctr</code>, <code>engagement_rate</code>, <code>scroll_rate</code>,
+      <code>ai_traffic_pct</code>, <code>trend_pct</code>) are stored as ×100 percentages
+      (0.76 means 0.76%, not 76%). Missingness follows <code>content_type</code>: feedly articles
+      have ~100% missing keyword fields; keyword articles have ~28% missing <code>word_count</code>.
+      Instead of a blind <code>fillna(0)</code>, binary <code>has_clicks</code> and
+      <code>has_ai_sessions</code> flags preserve the distinction between "zero" and "missing".
+    </p>
+  </section>
+
+  <!-- 3. METHODOLOGY -->
+  <section id="methodology" aria-labelledby="method-heading">
+    <h2 id="method-heading">Methodology</h2>
+
+    <h3>Features (29 total)</h3>
+    <p>
+      21 numeric features and 8 label-encoded categorical features. The numeric set includes
+      log-transformed traffic columns (<code>log_impressions_90d</code>, <code>log_clicks_90d</code>,
+      <code>log_sessions_90d</code>, <code>log_ai_sessions_90d</code>), engagement signals
+      (<code>ctr</code>, <code>scroll_rate</code>, <code>engagement_rate</code>), position and
+      freshness (<code>avg_position</code>, <code>days_since_last_update</code>,
+      <code>content_age_days</code>), and binary flags (<code>has_clicks</code>,
+      <code>has_ai_sessions</code>, <code>measurable_opportunity</code>). Categoricals include
+      <code>content_type</code>, <code>main_intent</code>, <code>age_tier</code>,
+      <code>freshness_tier</code>, <code>impression_tier</code>, and <code>position_tier</code>.
+    </p>
+
+    <h3>Models compared</h3>
+    <ul>
+      <li><strong>Rule baseline (w04)</strong> — staleness ≥ Q75 (104 days) scores +2; search volume ≥ Q75 (20) scores +1. Transparent but unvalidated.</li>
+      <li><strong>Logistic Regression</strong> — standard-scaled features, C=1.0, 1000 iterations. Interpretable first step.</li>
+      <li><strong>Random Forest</strong> — 200 trees, max depth 12, min samples per leaf 10, seed 42. Main model.</li>
+    </ul>
+
+    <h3>Validation design — client-grouped split</h3>
+    <p>
+      The 32 clients were shuffled (seed 42) and split 80/20: 26 clients for training,
+      6 clients as a held-out test set. Row-level random splits were explicitly rejected because
+      they allow the model to see rows from the same client in both train and test, inflating
+      scores by memorising client-level patterns. The honest effect: Precision@50 drops from
+      94% (random split) to 84% (grouped split) — a 10-point gap that represents the true
+      cost of the naive approach.
+    </p>
+
+    <h3>Leakage audit (7-point checklist)</h3>
+    <ul>
+      <li>No forbidden columns in the feature matrix (confirmed by set intersection check).</li>
+      <li>No label-derived or sibling columns (trend_pct, trend_direction excluded).</li>
+      <li>No future-window columns (last-30d sub-aggregates excluded).</li>
+      <li>No product flags or existing system scores as features.</li>
+      <li>Split grouped by repeating entity (client_id).</li>
+      <li>Base rate printed next to every metric.</li>
+      <li>Permutation importance sanity-checked — top 3 features are days_with_impressions, log_impressions_90d, ctr. None are forbidden.</li>
+    </ul>
+    <p>
+      Injection test (w06): adding <code>trend_pct</code> as a deliberate leak raised
+      Precision@50 from 84% to 100% and ROC-AUC from 0.760 to 1.000 — confirming the
+      evaluation harness would catch real leakage.
+    </p>
+
+    <h3>Primary metric</h3>
+    <p>
+      <strong>Precision@K</strong> — of the top K items ranked by model score, what fraction
+      carry the decline label? This matches the real use case: a content editor reviews the
+      top 20 or 50 flagged items each week. ROC-AUC and accuracy are reported as secondary checks.
+    </p>
+  </section>
+
+  <!-- 4. RESULTS -->
+  <section id="results" aria-labelledby="results-heading">
+    <h2 id="results-heading">Results</h2>
+    <p>
+      All metrics are computed on the same six held-out test clients. Base rate on those clients
+      was 39.1% — meaning a random guess would flag a declining item 39% of the time.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Precision@20</th>
+            <th>Precision@50</th>
+            <th>ROC-AUC</th>
+            <th>vs base rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Base rate (random)</td>
+            <td>39.1%</td>
+            <td>39.1%</td>
+            <td>—</td>
+            <td>1.0×</td>
+          </tr>
+          <tr>
+            <td>Rule baseline (w04)</td>
+            <td>30.0%</td>
+            <td>28.0%</td>
+            <td>—</td>
+            <td>0.7× (worse)</td>
+          </tr>
+          <tr>
+            <td>Logistic Regression</td>
+            <td>25.0%</td>
+            <td>36.0%</td>
+            <td>0.706</td>
+            <td>0.9×</td>
+          </tr>
+          <tr class="highlight-row">
+            <td>Random Forest ✓</td>
+            <td>90.0%</td>
+            <td>84.0%</td>
+            <td>0.760</td>
+            <td>2.1×</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure class="figure">
+      <img src="figures/fig1_model_vs_baseline.png"
+           alt="Bar chart comparing Precision@20 and Precision@50 across base rate, rule baseline, logistic regression, and random forest on held-out test clients">
+      <figcaption>
+        Figure 1. Model vs baseline — Precision@20 and @50 on six held-out clients (client-grouped split, seed 42).
+        The Random Forest (84% P@50) is 3× the rule baseline (28%) and 2.1× the base rate (39%).
+      </figcaption>
+    </figure>
+
+    <h3>Top features (permutation importance on test set)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Rank</th><th>Feature</th><th>Importance (mean ΔAUCroc)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td><code>days_with_impressions</code></td><td>0.115</td></tr>
+          <tr><td>2</td><td><code>log_impressions_90d</code></td><td>0.034</td></tr>
+          <tr><td>3</td><td><code>ctr</code></td><td>0.017</td></tr>
+          <tr><td>4</td><td><code>position_tier_enc</code></td><td>0.010</td></tr>
+          <tr><td>5</td><td><code>measurable_opportunity</code></td><td>0.008</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      The strongest signal is <code>days_with_impressions</code> — how many of the 90 days
+      a page received any impressions at all. Items with consistently spotty impression history
+      are most associated with the decline label. This is observational: the pattern does not prove
+      that impression consistency causes decline; it is a co-occurrence in this snapshot.
+    </p>
+
+    <figure class="figure">
+      <img src="figures/fig3_score_distribution.png"
+           alt="Histogram of model-estimated decline probabilities for all 30,000 content items, with thresholds at 0.50 and 0.70 marked">
+      <figcaption>
+        Figure 2. Distribution of decline probability scores (rf_proba) across all 30,000 items.
+        The spike near zero represents items with very few signals (zero impressions, zero clicks).
+        The bulk of scored items concentrate above 0.50, reflecting the 54% overall decline rate.
+      </figcaption>
+    </figure>
+
+    <figure class="figure">
+      <img src="figures/fig2_reason_code_by_content_type.png"
+           alt="Grouped bar chart showing action queue reason code distribution by content type: comparison article, feedly article, keyword article">
+      <figcaption>
+        Figure 3. Action queue breakdown by content type and reason code.
+        Keyword articles dominate the MODEL_HIGH_DECLINE bucket (~7,900 items). Feedly articles
+        have fewer high-decline flags — their missing keyword features reduce model confidence.
+      </figcaption>
+    </figure>
+
+    <h3>Error analysis</h3>
+    <p>
+      Of 2,325 test rows, 827 (35.6%) were misclassified at the 0.5 threshold. Error rate
+      differs by content type: feedly articles 26.9%, keyword articles 41.6%. Feedly articles
+      have all keyword features zero-filled (search_volume, competition, cpc), giving the model
+      fewer discriminating signals — their scores lean on the label base rate. Boundary-zone items
+      (predicted probability 0.40–0.60) account for 636 test rows (27.4%); human review is
+      essential in this range.
+    </p>
+  </section>
+
+  <!-- 5. LIMITATIONS -->
+  <section id="limitations" aria-labelledby="limits-heading">
+    <h2 id="limits-heading">Limitations &amp; Honest Framing</h2>
+    <p>
+      The following limits are stated before a reader finds them — this is standard practice
+      in honest reporting, not a disclaimer added to soften a weak result.
+    </p>
+    <ul class="limit-list">
+      <li>
+        <strong>Cross-sectional snapshot only</strong>
+        The dataset is one 90-day cross-section per content item. The model captures co-occurrence
+        patterns in this period. Trajectory, seasonality, and longer-term trend dynamics are not
+        modelled. "Declining now" and "recovering after a dip" can look identical.
+      </li>
+      <li>
+        <strong>Observational label — no causal claim</strong>
+        <code>is_declining_label</code> is derived from the impression trend within the same snapshot
+        used to build features. We observed that certain signal patterns co-occur with decline;
+        we did not run an intervention study. "Refreshing content X will reverse its decline" is
+        not a claim this work supports.
+      </li>
+      <li>
+        <strong>Six held-out clients = high variance</strong>
+        84% Precision@50 was measured on one draw of six clients from 32. A different draw could
+        yield a different number. The estimate is directionally strong but should not be read as a
+        guaranteed floor for all future clients.
+      </li>
+      <li>
+        <strong>Feedly articles are underserved</strong>
+        This content type has ~100% missing keyword data. The model's error rate on feedly articles
+        (26.9%) reflects weaker signals, not a content-quality judgment. Flags for feedly articles
+        warrant extra human scrutiny.
+      </li>
+      <li>
+        <strong>No time-series component</strong>
+        The snapshot does not model when a page started declining or how fast. A page declining
+        steeply and one barely declining receive similar scores if their 90-day aggregates look alike.
+      </li>
+      <li>
+        <strong>Boundary zone is genuinely ambiguous</strong>
+        Items with rf_proba between 0.40 and 0.60 (27.4% of the test set) cannot be reliably
+        classified. Treating them as confident flags would misstate the evidence.
+      </li>
+    </ul>
+  </section>
+
+  <!-- 6. RECOMMENDATIONS -->
+  <section id="recommendations" aria-labelledby="rec-heading">
+    <h2 id="rec-heading">Ranked Recommendations</h2>
+    <p>
+      The action playbook has four tiers. All tiers are decision-support — human review
+      precedes any content change. The queue is not a content management system.
+    </p>
+
+    <div class="action-table">
+      <div class="action-row header">
+        <span>Reason code</span>
+        <span style="padding:0 12px">Signals</span>
+        <span>Recommended action</span>
+      </div>
+      <div class="action-row">
+        <span class="code">MODEL_HIGH_DECLINE</span>
+        <span class="desc">rf_proba ≥ 0.70 — 8,369 items (27.9%)</span>
+        <span class="act"><strong style="color:var(--text)">Refresh content</strong> — highest-confidence flag; prioritise for editorial review this cycle</span>
+      </div>
+      <div class="action-row">
+        <span class="code">MODEL_MOD_STALE</span>
+        <span class="desc">rf_proba 0.50–0.70 AND days_since_update ≥ 104 — 3,451 items (11.5%)</span>
+        <span class="act"><strong style="color:var(--text)">Review freshness</strong> — model is directionally cautious; staleness corroborates</span>
+      </div>
+      <div class="action-row">
+        <span class="code">MODEL_MOD_VOLUME</span>
+        <span class="desc">rf_proba 0.50–0.70 AND search_volume ≥ 20 — 2,362 items (7.9%)</span>
+        <span class="act"><strong style="color:var(--text)">Review opportunity</strong> — moderate signal; high search volume justifies attention</span>
+      </div>
+      <div class="action-row">
+        <span class="code">MONITOR</span>
+        <span class="desc">rf_proba &lt; 0.50 — 15,818 items (52.7%)</span>
+        <span class="act"><strong style="color:var(--text)">Monitor</strong> — no immediate action; re-check at the next refresh cycle</span>
+      </div>
+    </div>
+
+    <h3>What must NOT be automated</h3>
+    <ul>
+      <li><strong>Content deletion</strong> — the model flags decline, not irrelevance.</li>
+      <li><strong>URL redirects or slug changes</strong> — SEO consequences outside the model's scope.</li>
+      <li><strong>Batch actioning at a single threshold</strong> — 84% Precision@50 means ~8 of every 50 "Refresh" flags are false positives; individual review catches them.</li>
+      <li><strong>Client communications from raw scores</strong> — the output is an internal prioritisation tool, not a client-ready report.</li>
+    </ul>
+
+    <h3>Value proposition (honest)</h3>
+    <p>
+      Without the model, a reviewer scanning 30,000 items at random would find a declining item
+      39% of the time (base rate). With the model's top-50 queue, the observed rate on held-out
+      clients was 84% — a measured 2.1× improvement. This is the result on one draw of six
+      clients; it is directionally strong and not guaranteed to generalise without revalidation
+      on new data.
+    </p>
+
+    <h3>Retrain triggers</h3>
+    <ul>
+      <li>Precision@50 on a fresh sample drops below 65%.</li>
+      <li>Overall label rate shifts by more than ±10 percentage points.</li>
+      <li>A new content type with &gt;500 items is introduced (no learned signal for it).</li>
+      <li>New 90-day snapshot available (~quarterly by nature of the data vintage).</li>
+    </ul>
+  </section>
+
+  <!-- 7. REPRODUCIBILITY -->
+  <section id="reproducibility" aria-labelledby="repro-heading">
+    <h2 id="repro-heading">Reproducibility</h2>
+    <p>
+      All notebooks are pinned to <code>RANDOM_SEED = 42</code>. Running each notebook
+      top-to-bottom in order reproduces the numbers in this paper exactly.
+      No private data is committed; the dataset loads from
+      <code>data/raw/content_refresh_anonymized.csv</code> which ships with the repo.
+    </p>
+    <div class="notebook-links">
+      <a class="notebook-link" href="https://github.com/ahmedshereef1/flyrank-ml-internship/blob/main/work/notebooks/w04_baseline_score.ipynb" target="_blank" rel="noopener">
+        📓 w04 — Rule baseline
+      </a>
+      <a class="notebook-link" href="https://github.com/ahmedshereef1/flyrank-ml-internship/blob/main/work/notebooks/w05_model.ipynb" target="_blank" rel="noopener">
+        📓 w05 — Model training
+      </a>
+      <a class="notebook-link" href="https://github.com/ahmedshereef1/flyrank-ml-internship/blob/main/work/notebooks/w06_validation_audit.ipynb" target="_blank" rel="noopener">
+        📓 w06 — Validation &amp; leakage audit
+      </a>
+      <a class="notebook-link" href="https://github.com/ahmedshereef1/flyrank-ml-internship/blob/main/work/notebooks/w07_action_playbook.ipynb" target="_blank" rel="noopener">
+        📓 w07 — Action playbook
+      </a>
+      <a class="notebook-link" href="https://github.com/ahmedshereef1/flyrank-ml-internship/blob/main/work/notebooks/capstone.ipynb" target="_blank" rel="noopener">
+        📓 Capstone notebook
+      </a>
+      <a class="notebook-link" href="https://github.com/ahmedshereef1/flyrank-ml-internship" target="_blank" rel="noopener">
+        🗂 Full repo
+      </a>
+    </div>
+  </section>
+
+  <!-- 8. ACKNOWLEDGMENTS -->
+  <section id="acknowledgments" aria-labelledby="ack-heading">
+    <h2 id="ack-heading">Acknowledgments &amp; Data Credit</h2>
+    <p>
+      Built on the <strong>FlyRank ML Internship dataset</strong> — a pseudonymized,
+      research-safe export of real production search and content analytics data.
+      Data source and internship programme: <a href="https://flyrank.ai" target="_blank" rel="noopener noreferrer">flyrank.ai</a>.
+    </p>
+    <p>
+      Crediting the data source is standard research practice. The dataset enabled work on
+      real-world scale and signal complexity that a synthetic dataset would not have provided.
+    </p>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <div class="inner">
+    <p>Ahmed Sherif · ML Intern at FlyRank · 2026 ·
+      <a href="https://github.com/ahmedshereef1/flyrank-ml-internship" target="_blank" rel="noopener">GitHub repo</a>
+    </p>
+    <button class="theme-toggle" id="themeBtn" aria-label="Toggle light/dark theme">Toggle theme</button>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var btn = document.getElementById('themeBtn');
+    var root = document.documentElement;
+    var stored;
+    try { stored = localStorage.getItem('theme'); } catch (e) {}
+    if (stored) root.setAttribute('data-theme', stored);
+    btn.addEventListener('click', function () {
+      var current = root.getAttribute('data-theme');
+      if (!current) current = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      var next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+  })();
+</script>
+
+</body>
+</html>

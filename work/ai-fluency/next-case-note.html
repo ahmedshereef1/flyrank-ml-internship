@@ -1,0 +1,655 @@
+<title>Portfolio Continuity Note</title>
+<style>
+  /* ── Tokens ── */
+  :root {
+    --bg:         #0D1B2A;
+    --bg-card:    #152235;
+    --bg-card-2:  #1A2D42;
+    --border:     rgba(255,255,255,0.08);
+    --text:       #F0EDE6;
+    --text-muted: #8FA3B8;
+    --accent:     #C9A84C;
+    --accent-dim: rgba(201,168,76,0.12);
+    --accent-border: rgba(201,168,76,0.35);
+    --green:      #4CAF7D;
+    --green-dim:  rgba(76,175,125,0.10);
+    --radius:     6px;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg:         #F7F5F0;
+      --bg-card:    #FFFFFF;
+      --bg-card-2:  #F0EDE6;
+      --border:     rgba(0,0,0,0.09);
+      --text:       #0D1B2A;
+      --text-muted: #4A6070;
+      --accent:     #7A5E1A;
+      --accent-dim: rgba(122,94,26,0.09);
+      --accent-border: rgba(122,94,26,0.30);
+      --green:      #1A7A4A;
+      --green-dim:  rgba(26,122,74,0.09);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg:         #F7F5F0;
+    --bg-card:    #FFFFFF;
+    --bg-card-2:  #F0EDE6;
+    --border:     rgba(0,0,0,0.09);
+    --text:       #0D1B2A;
+    --text-muted: #4A6070;
+    --accent:     #7A5E1A;
+    --accent-dim: rgba(122,94,26,0.09);
+    --accent-border: rgba(122,94,26,0.30);
+    --green:      #1A7A4A;
+    --green-dim:  rgba(26,122,74,0.09);
+  }
+  :root[data-theme="dark"] {
+    --bg:         #0D1B2A;
+    --bg-card:    #152235;
+    --bg-card-2:  #1A2D42;
+    --border:     rgba(255,255,255,0.08);
+    --text:       #F0EDE6;
+    --text-muted: #8FA3B8;
+    --accent:     #C9A84C;
+    --accent-dim: rgba(201,168,76,0.12);
+    --accent-border: rgba(201,168,76,0.35);
+    --green:      #4CAF7D;
+    --green-dim:  rgba(76,175,125,0.10);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* ── Layout ── */
+  .page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── Header ── */
+  .doc-header {
+    padding: 56px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+
+  .doc-eyebrow {
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .doc-title {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(1.7rem, 4.5vw, 2.4rem);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .doc-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .doc-sub {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 540px;
+    line-height: 1.7;
+  }
+
+  .doc-meta {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .meta-pill {
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 4px 10px;
+  }
+
+  /* ── Section ── */
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 16px;
+    text-wrap: balance;
+  }
+
+  p {
+    font-size: 0.975rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    max-width: 600px;
+  }
+
+  p + p { margin-top: 12px; }
+
+  /* ── Step list ── */
+  .steps {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+
+  .step-num {
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    border-radius: 3px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .step-body {
+    font-size: 0.975rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    padding-top: 4px;
+  }
+
+  .step-body strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  code {
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 0.85em;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 5px;
+    color: var(--accent);
+  }
+
+  /* ── Three-beat card ── */
+  .beat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-top: 20px;
+  }
+
+  .beat-card .beat-label {
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .beat-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 10px 16px;
+    align-items: baseline;
+    font-size: 0.95rem;
+  }
+
+  .beat-row + .beat-row {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+
+  .beat-key {
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .beat-val {
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  .beat-val strong { color: var(--text); font-weight: 600; }
+
+  /* ── Next piece card ── */
+  .next-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-top: 20px;
+  }
+
+  .next-card .next-title {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .next-card p {
+    font-size: 0.9rem;
+    margin-top: 0;
+  }
+
+  .next-card .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .tag {
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 3px 8px;
+  }
+
+  /* ── Reminder card ── */
+  .reminder-card {
+    background: var(--green-dim);
+    border: 1px solid rgba(76,175,125,0.25);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-top: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  :root[data-theme="light"] .reminder-card,
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) .reminder-card {
+      border-color: rgba(26,122,74,0.20);
+    }
+  }
+
+  .reminder-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .reminder-body { flex: 1; }
+
+  .reminder-body .reminder-label {
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+
+  .reminder-body p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .reminder-body strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* ── Context card ── */
+  .context-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-top: 20px;
+  }
+
+  .context-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 8px 16px;
+    align-items: baseline;
+  }
+
+  .context-row + .context-row {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .ctx-key {
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding-top: 1px;
+  }
+
+  .ctx-val {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .ctx-val a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .ctx-val a:hover { opacity: 0.8; }
+
+  .ctx-val strong { color: var(--text); }
+
+  /* ── Divider ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 48px 0;
+  }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 0;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    max-width: none;
+    margin: 0;
+  }
+
+  .theme-toggle {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 14px;
+    min-height: 36px;
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .theme-toggle:hover { color: var(--text); border-color: var(--accent); }
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 480px) {
+    .page { padding: 0 16px 60px; }
+    .doc-header { padding: 40px 0 32px; }
+    .beat-row { grid-template-columns: 1fr; gap: 2px; }
+    .beat-key { font-size: 0.65rem; }
+    .context-row { grid-template-columns: 1fr; gap: 2px; }
+    .ctx-key { font-size: 0.65rem; }
+    .reminder-card { flex-direction: column; gap: 10px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+
+<div class="page">
+
+  <header class="doc-header">
+    <p class="doc-eyebrow">General AI Fluency · Week 6 Capstone · September 2026</p>
+    <h1 class="doc-title">How to add the <em>next case study</em> — and what comes next</h1>
+    <p class="doc-sub">A standing reference so the portfolio never goes stale. The build context is preserved; the next update is a short conversation, not a rebuild.</p>
+    <div class="doc-meta">
+      <span class="meta-pill">Ahmed Sherif</span>
+      <span class="meta-pill">ahmedsherif565.netlify.app</span>
+      <span class="meta-pill">FlyRank ML Internship · 2026</span>
+    </div>
+  </header>
+
+  <!-- SECTION 1: How to add the next case -->
+  <div class="section">
+    <p class="section-label">Part 1 — The method</p>
+    <h2>How to add the next case study</h2>
+    <p>Every case follows the same three-beat shape. Write it in that order first, then drop it into the portfolio site. This note is the complete recipe — no rebuild needed.</p>
+
+    <div class="beat-card">
+      <p class="beat-label">The three-beat shape (Week 2 template)</p>
+      <div class="beat-row">
+        <span class="beat-key">Problem</span>
+        <span class="beat-val">One sentence: <strong>what was broken or unknown</strong> before you touched it. No jargon; a non-technical person should grasp it.</span>
+      </div>
+      <div class="beat-row">
+        <span class="beat-key">What I did</span>
+        <span class="beat-val">Two to four sentences: the approach, the tools, the key decision. What made this <strong>your</strong> solution and not the obvious one.</span>
+      </div>
+      <div class="beat-row">
+        <span class="beat-key">What came of it</span>
+        <span class="beat-val">One to two sentences: the <strong>measured outcome</strong>. A number always beats a description — "84% Precision@50 vs 39% base rate" beats "significantly better than random".</span>
+      </div>
+    </div>
+
+    <ol class="steps" style="margin-top: 28px;">
+      <li class="step">
+        <span class="step-num">1</span>
+        <span class="step-body"><strong>Draft the three beats</strong> in your Claude Project. Paste your notes, notebook outputs, or a PR description — say "turn this into a three-beat case study". Your Claude Project already knows your voice, stack, and the FlyRank context, so it needs minimal prompting.</span>
+      </li>
+      <li class="step">
+        <span class="step-num">2</span>
+        <span class="step-body"><strong>Open <code>work/ai-fluency/site/index.html</code></strong> in the repo. Find the <code>id="building"</code> section. The current case study lives in the <code>.build-card</code> block as a label + result line.</span>
+      </li>
+      <li class="step">
+        <span class="step-num">3</span>
+        <span class="step-body"><strong>Add a new card</strong> above the existing one. Copy the <code>.build-card</code> markup, update the <code>.label</code> to the project name and the <code>p</code> to your three-beat summary. Keep it to three to five lines — the site's strength is its density.</span>
+      </li>
+      <li class="step">
+        <span class="step-num">4</span>
+        <span class="step-body"><strong>Update the hero subtitle</strong> to reflect the new work. The <code>.hero-sub</code> paragraph is one sentence — revise it so a recruiter landing cold knows what you're building now, not what you built last.</span>
+      </li>
+      <li class="step">
+        <span class="step-num">5</span>
+        <span class="step-body"><strong>Push to GitHub</strong> — Netlify auto-deploys from <code>work/ai-fluency/site/</code> on every push to <code>main</code>. The live URL stays the same: <code>ahmedsherif565.netlify.app</code>.</span>
+      </li>
+    </ol>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SECTION 2: The next piece -->
+  <div class="section">
+    <p class="section-label">Part 2 — What's next</p>
+    <h2>The named next piece of work</h2>
+    <p>A portfolio with one case study proves you can finish once. A second case proves a pattern. The next piece I intend to add:</p>
+
+    <div class="next-card">
+      <p class="next-title">Time-series extension — from snapshot to trajectory</p>
+      <p>The FlyRank capstone model works on a 90-day cross-section. The next piece takes the same pipeline and asks whether a sequence of snapshots — a rolling monthly window — improves prediction by capturing trajectory, not just state. Problem: static features can't distinguish a page recovering from a dip versus one in freefall. What I'll do: extend the feature set with delta features (month-over-month impression change, engagement acceleration) and compare a second Random Forest against the original. What I'm aiming for: a measurable reduction in the boundary-zone error rate (currently 27.4% of test items are ambiguous at the 0.5 threshold).</p>
+      <div class="tags">
+        <span class="tag">Python</span>
+        <span class="tag">pandas</span>
+        <span class="tag">scikit-learn</span>
+        <span class="tag">time-series features</span>
+        <span class="tag">delta engineering</span>
+        <span class="tag">Precision@K</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SECTION 3: The reminder -->
+  <div class="section">
+    <p class="section-label">Part 3 — The reminder</p>
+    <h2>Concrete reminder set</h2>
+    <p>A named next piece without a trigger is still a vague intention. The reminder below is set:</p>
+
+    <div class="reminder-card">
+      <div class="reminder-icon">📅</div>
+      <div class="reminder-body">
+        <p class="reminder-label">Recurring calendar nudge</p>
+        <p><strong>First Monday of each month — "Portfolio update: is there a new case to add?"</strong><br>
+        Set in Google Calendar as a recurring event, no invitees, 15-minute block. The sole agenda: open this note, check if any work from the past month has a three-beat story, and draft it if so. If nothing is ready, the block takes five minutes to close. The friction is near zero; the habit compounds.</p>
+      </div>
+    </div>
+
+    <div class="reminder-card" style="margin-top: 12px;">
+      <div class="reminder-icon">🔔</div>
+      <div class="reminder-body">
+        <p class="reminder-label">Project-specific trigger</p>
+        <p><strong>When the time-series extension produces a Precision@50 result — add the case immediately.</strong><br>
+        Notebook outputs decay in clarity the longer you wait. The rule: if a notebook run produces a number worth keeping, draft the three beats the same day. The Claude Project is open; it costs less than ten minutes while the context is still live in your head.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SECTION 4: Build context preserved -->
+  <div class="section">
+    <p class="section-label">Part 4 — Build context</p>
+    <h2>What's preserved so future updates are cheap</h2>
+
+    <div class="context-card">
+      <div class="context-row">
+        <span class="ctx-key">Claude Project</span>
+        <span class="ctx-val">Kept active with full FlyRank context, voice notes, and the identity kit. The next case is a short conversation — paste notes, say "three-beat case study", done.</span>
+      </div>
+      <div class="context-row">
+        <span class="ctx-key">Portfolio site</span>
+        <span class="ctx-val"><a href="https://ahmedsherif565.netlify.app" target="_blank" rel="noopener noreferrer">ahmedsherif565.netlify.app</a> — Netlify, auto-deploys on push. Design tokens and layout are stable; adding a case is markup, not a redesign.</span>
+      </div>
+      <div class="context-row">
+        <span class="ctx-key">Research paper</span>
+        <span class="ctx-val"><a href="https://ahmedshereef1.github.io/flyrank-ml-internship/" target="_blank" rel="noopener noreferrer">ahmedshereef1.github.io/flyrank-ml-internship</a> — GitHub Pages, same repo. The capstone result lives here and links from the portfolio.</span>
+      </div>
+      <div class="context-row">
+        <span class="ctx-key">This note</span>
+        <span class="ctx-val"><code>work/ai-fluency/next-case-note.html</code> in the repo. The canonical reference — update it whenever the process changes or a new piece is completed.</span>
+      </div>
+      <div class="context-row">
+        <span class="ctx-key">Design system</span>
+        <span class="ctx-val">DM Serif Display + Inter + DM Mono · Navy <code>#0D1B2A</code> · Gold <code>#C9A84C</code>. All three pages share the same tokens. A new page inherits the identity without manual matching.</span>
+      </div>
+      <div class="context-row">
+        <span class="ctx-key">Reminder cadence</span>
+        <span class="ctx-val"><strong>First Monday of each month</strong> · Google Calendar · recurring · 15 min. Plus: draft the three beats immediately on any notebook result worth keeping.</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Ahmed Sherif · Portfolio continuity note · September 2026</p>
+    <button class="theme-toggle" id="themeBtn" aria-label="Toggle light/dark theme">Toggle theme</button>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var btn = document.getElementById('themeBtn');
+    var root = document.documentElement;
+    var stored;
+    try { stored = localStorage.getItem('theme'); } catch (e) {}
+    if (stored) root.setAttribute('data-theme', stored);
+    btn.addEventListener('click', function () {
+      var current = root.getAttribute('data-theme');
+      if (!current) {
+        current = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      var next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+  })();
+</script>
